@@ -1,0 +1,18 @@
+#map {
+  height: 400px;
+  width: 600px;
+}
+
+#console {
+  width: 600px;
+  background-color: whitesmoke;
+}
+
+#console .title {
+  color: grey;
+}
+
+#console p {
+  margin: 0;
+  padding: 0.5rem;
+}
