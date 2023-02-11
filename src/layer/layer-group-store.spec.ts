@@ -1,7 +1,7 @@
 import OlLayerBase from 'ol/layer/Base';
-import { MapStore } from './map-store';
+import { MapStore } from '../map/map-store';
 import { LayerGroupStore } from './layer-group-store';
-import { getLayerGroup } from './test-data';
+import { getLayerGroup } from '../test/test-data';
 import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
 
@@ -10,8 +10,8 @@ describe('LayersStore', () => {
   let baseLayer: OlLayerBase;
   beforeEach(() => {
     // Here it's safe to use each time another instance of storeMap as it's
-    // only internal tests. Use one backgroundLayerStore to test LayerGroupStore
-    // (parent).
+    // only internal tests. Use one backgroundLayerStore to test
+    // LayerGroupStore (parent).
     store = new MapStore().getBackgroundLayerStore();
     baseLayer = new OlLayerBase({});
   });

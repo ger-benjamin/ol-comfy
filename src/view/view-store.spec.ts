@@ -1,7 +1,7 @@
 import OlView from 'ol/View';
-import { MapStore } from './map-store';
+import { MapStore } from '../map/map-store';
 import { ViewStore } from './view-store';
-import { OPENLAYERS_ANIMATION_DELAY } from './const-from-outside';
+import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
 
 /* Standard OpenLayers animation duration is 250ms. Add 50 more to be sure. */
 const ANIMATION_WAIT_TIME = OPENLAYERS_ANIMATION_DELAY + 50;
@@ -10,8 +10,8 @@ describe('ViewStore', () => {
   let store: ViewStore;
 
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's only
-    // internal tests.
+    // Here it's safe to use each time another instance of store as it's
+    // only internal tests.
     store = new MapStore().getViewStore();
   });
 

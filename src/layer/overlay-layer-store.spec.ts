@@ -3,7 +3,7 @@ import OlSourceVector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import { OverlayLayerStore } from './overlay-layer-store';
-import { MapStore } from './map-store';
+import { MapStore } from '../map/map-store';
 import { CommonProperties } from './layer-group-store';
 import OlSourceCluster from 'ol/source/Cluster';
 import OlCollection from 'ol/Collection';
@@ -13,8 +13,8 @@ describe('OverlayLayersStore', () => {
   let store: OverlayLayerStore;
   let overlayLayer: OlLayerVector<any>;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's only
-    // internal tests.
+    // Here it's safe to use each time another instance of store as it's
+    // only internal tests.
     mapStore = new MapStore();
     store = mapStore.getOverlayLayerStore();
     overlayLayer = new OlLayerVector({
@@ -224,8 +224,8 @@ describe('OverlayLayersStore', () => {
       new OlFeature({ geometry: new OlGeomPoint([]) }),
     ];
     store.addFeatures(layerId, features);
-    // Should return an empty array, as clusters are only created if the map is
-    // actually rendered
+    // Should return an empty array, as clusters are only created if the
+    // map is actually rendered
     expect(store.getClusterFeatures(layerId)?.length).toEqual(0);
   });
 });

@@ -1,4 +1,4 @@
-import { MapStore } from '../../src/map-store';
+import { MapStore } from '../../src/map/map-store';
 
 interface Stores {
   map?: MapStore;

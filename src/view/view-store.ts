@@ -3,7 +3,7 @@ import OlView from 'ol/View';
 import { Extent as OlExtent } from 'ol/extent';
 import { isNil } from 'lodash';
 import { getPointResolution } from 'ol/proj';
-import { OPENLAYERS_ANIMATION_DELAY } from './const-from-outside';
+import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
 
 /**
  * Storage for the state of the view in the map.
@@ -59,8 +59,8 @@ export class ViewStore {
 
   /**
    * Zoom in or zoom out to the nearest resolution using a small animation.
-   * @param delta number of resolution step to zoom in (positive value) or zoom
-   *   out (negative value);
+   * @param delta number of resolution step to zoom in (positive value) or
+   *     zoom out (negative value);
    */
   zoom(delta: number) {
     const currentZoom = this.view.getZoom();
