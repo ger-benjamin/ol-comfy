@@ -32,7 +32,6 @@ const print = (msg) => {
 };
 
 // Below: Use ol-comfy.
-//
 // Your controller initializing the map.
 const viewStore = mapStore.getViewStore();
 viewStore.setMapView(

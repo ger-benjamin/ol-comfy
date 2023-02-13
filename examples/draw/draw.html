@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="./draw.css" />
+  </head>
+  <body>
+    <p>Complete example to show how to manage drawing.</p>
+    <p>
+      Allow to draw, modify, delete under some custom conditions. Ol-comfy helps
+      by auto-adding and removing interactions, add identifier to retrieve them
+      easily from everywhere, activate only one interaction after another. This
+      example shows also custom styling regarding the feature, and feature
+      deletion.
+    </p>
+    <p>Read the TS file to understand what it does.</p>
+    <div id="map"></div>
+    <label for="type">Draw:</label>
+    <select id="type">
+      <option value="point">points</option>
+      <option value="line">lines</option>
+    </select>
+    <div id="console">
+      <p class="title">Output message:</p>
+      <p class="text"></p>
+    </div>
+    <script type="module" src="./draw.ts"></script>
+  </body>
+</html>

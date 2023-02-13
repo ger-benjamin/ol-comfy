@@ -1,15 +1,10 @@
 import { isNil } from 'lodash';
-import { EventsKey } from 'ol/events';
-import { unByKey } from 'ol/Observable';
 import OlBaseObject from 'ol/Object';
 import OlMap from 'ol/Map';
+import OlStyle from 'ol/style/Style';
 
-/**
- * Unsubscribe to all OpenLayer observables.
- */
-export const unByKeyAll = (eventKeys: EventsKey[]) => {
-  eventKeys.forEach((eventKey) => unByKey(eventKey));
-};
+/** Single instance of an ol empty style */
+export const EmptyStyle = new OlStyle();
 
 /**
  * @returns A projection distance from an amount of pixels (from [0, 0] ->

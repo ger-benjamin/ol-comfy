@@ -9,7 +9,7 @@ import { never } from 'ol/events/condition';
  * Manage "area" drawing interaction on an OpenLayers map.
  * For Polygon and Circle.
  */
-export default class Area extends Draw {
+export class DrawBasicShape extends Draw {
   constructor(map: OlMap, options: Options, uid: string) {
     super(map, uid);
     if (!this.interaction) {
@@ -46,6 +46,18 @@ export default class Area extends Draw {
     return {
       source,
       type: 'Circle',
+    };
+  }
+
+  /**
+   * Get defaults configured Drawing options to draw circles.
+   * @static
+   */
+  static getDefaultLineOptions(source: OlSourceVector<OlGeometry>): Options {
+    return {
+      freehandCondition: never,
+      source,
+      type: 'LineString',
     };
   }
 
