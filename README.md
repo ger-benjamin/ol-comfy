@@ -1,5 +1,7 @@
 # ol-comfy
 
+[![CI](https://github.com/ger-benjamin/ol-comfy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ger-benjamin/ol-comfy/actions/workflows/ci.yml)
+
 Comfortable and convenient Openlayers shortcuts for standard usage.
 
 This library provides a good help to answer common Openlayers needs in a web application using web-components. Some features:
