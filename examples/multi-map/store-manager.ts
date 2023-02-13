@@ -1,11 +1,15 @@
 import { MapStore } from '../../src/map/map-store';
 
-interface Stores {
+interface Store {
   map?: MapStore;
 }
 
-export class StoresManager {
-  private stores: { [key: string]: Stores } = {};
+/**
+ * A instance that create, provide and delete store.
+ * Exposed as a singleton, it allows you to manage easily all of your stores.
+ */
+export class StoreManager {
+  private stores: { [key: string]: Store } = {};
 
   getMapStore(storesId: string): MapStore {
     this.maybeCreateStores(storesId);
@@ -30,5 +34,6 @@ export class StoresManager {
   }
 }
 
-const storesManager = new StoresManager();
-export default storesManager;
+// Expose it as singleton.
+const storeManager = new StoreManager();
+export default storeManager;

@@ -1,5 +1,5 @@
 import { EventsKey, listen } from 'ol/events';
-import { unByKeyAll } from '../ol-utils';
+import { unByKeyAll } from './utils';
 import BaseEvent from 'ol/events/Event';
 
 /**

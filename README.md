@@ -1,12 +1,16 @@
 # ol-comfy
 
-Confortable and convenient Openlayers shortcuts for standard usage.
+Comfortable and convenient Openlayers shortcuts for standard usage.
 
-I've initially wrote this code for a project.
-This code is "legacy" and next step will be to untangle it
-to make it easier and lighter to implement, extend, ...
-More comfy to use.
+This library provides a good help to answer common Openlayers needs in a web application using web-components. Some features:
 
-I'll also add some pieces for to draw with Openlayers.
+- Adds utils Openlayers functions
+- Adds identifier to layer, interaction, control... to be able to retrieve it in every component.
+- Add some observables.
+- Simplify drawing (enable one tool at once, manage interactions).
+- Not constraining architecture: takes only what you need, extends what you need.
 
-Works already well, but please, wait a little bit before to use it.
+I've initially written this code for a project. This code is "legacy" and next step will be to untangle it to make it easier and
+lighter to implement, extend, ... More comfy to use.
+
+Works already well, but please, wait a bit before to use it.

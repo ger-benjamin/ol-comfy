@@ -38,9 +38,9 @@
   },
   "scripts": {
     "build": "npm run prettier && npm run lint && npm run test && npm run build-only",
-    "build-only": "tsc --pretty",
+    "build-only": "tsc --skipLibCheck --pretty",
     "doc": "typedoc src --out apidoc --readme none --hideGenerator",
-    "lint": "eslint src/*.ts",
+    "lint": "eslint src/*.ts src/**/*.ts",
     "prettier": "npx prettier '{examples/,src/}{**/*,*}.{js,ts,jsx,tsx,html,css}' --write",
     "start": "parcel serve --no-cache --port 8080 examples/*.html --public-url /",
     "test": "jest --coverage"
