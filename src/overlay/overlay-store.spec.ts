@@ -1,13 +1,13 @@
 import OlOverlay from 'ol/Overlay';
-import { MapStore } from './map-store';
+import { MapStore } from '../map/map-store';
 import { OverlayStore } from './overlay-store';
 
 describe('OverlayStore', () => {
   let mapStore: MapStore;
   let store: OverlayStore;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's only
-    // internal tests.
+    // Here it's safe to use each time another instance of store as it's
+    // only internal tests.
     mapStore = new MapStore();
     store = mapStore.getOverlayStore();
   });

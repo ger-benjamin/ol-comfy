@@ -1,5 +1,5 @@
-import { MapStore } from '../../src/map-store';
-import { CommonProperties } from '../../src/layer-group-store';
+import { MapStore } from '../../src/map/map-store';
+import { CommonProperties } from '../../src/layer/layer-group-store';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerVector from 'ol/layer/Vector';

@@ -1,8 +1,8 @@
 import OlMap from 'ol/Map';
-import { BackgroundLayerStore } from './background-layer-store';
-import { OverlayLayerStore } from './overlay-layer-store';
-import { OverlayStore } from './overlay-store';
-import { ViewStore } from './view-store';
+import { BackgroundLayerStore } from '../layer/background-layer-store';
+import { OverlayLayerStore } from '../layer/overlay-layer-store';
+import { OverlayStore } from '../overlay/overlay-store';
+import { ViewStore } from '../view/view-store';
 import { uniq } from 'lodash';
 import OlControl from 'ol/control/Control';
 

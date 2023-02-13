@@ -4,8 +4,8 @@ import { ScaleLine } from 'ol/control';
 describe('MapStore', () => {
   let store: MapStore;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's only
-    // internal tests.
+    // Here it's safe to use each time another instance of store as it's
+    // only internal tests.
     store = new MapStore();
   });
 
