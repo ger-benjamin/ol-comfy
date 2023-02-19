@@ -7,46 +7,53 @@ import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
 import { FrameState as OlFrameState } from 'ol/PluggableMap';
 import { Subject } from 'rxjs';
-
-/**
- * Existing layers groups at the root of the map.layers.
- */
-export enum LayerGroups {
-  Background = 'Background',
-  Overlay = 'Overlay',
-}
+import { insertAtKeepOrder } from '../collection';
+import { getObservable } from '../map/utils';
 
 /**
  * Layers common properties
  */
 export enum CommonProperties {
-  LayerID = 'layerId',
-  Label = 'label',
-  visible = 'visible',
+  LayerUid = 'olcLayerUid',
+  Label = 'olcLabel',
+  visible = 'olcVisible',
 }
 
 /**
- * Type for info on layer retrieved by the getLayerInfo method.
+ * Options to create layer group.
  */
-export interface LayerProperties {
-  [CommonProperties.LayerID]: string;
-  [CommonProperties.Label]: string;
-  [CommonProperties.visible]: boolean;
-
-  [key: string]: unknown;
+export interface LayerGroupOptions {
+  /**
+   * Position of the layer group in the map layer array. This position is
+   * fixed.
+   */
+  position?: number;
+  /** Unique ID for the layer group. */
+  [CommonProperties.LayerUid]?: string;
 }
 
 /**
- * Parent class for layer group, helps to manipulate layer group.
+ * Parent (abstract) class for layer group, helps to manipulate one layer group.
+ * The child class must start by setting the layerGroup.
  */
 export class LayerGroupStore {
-  readonly layerAdded: Subject<OlLayerBase>;
+  private readonly layerAddedId = 'olcLayerAdded';
   protected readonly map: OlMap;
   protected layerGroup: OlLayerGroup;
 
-  constructor(map: OlMap) {
+  constructor(map: OlMap, layerGroupUid: string) {
     this.map = map;
-    this.layerAdded = new Subject<OlLayerBase>();
+    this.addObservables(layerGroupUid);
+  }
+
+  /**
+   * @returns an observables that notify addition of layer in this group.
+   */
+  get layerAdded(): Subject<OlLayerBase> {
+    return getObservable(
+      this.map,
+      this.getObservableName(this.layerAddedId)
+    ) as Subject<OlLayerBase>;
   }
 
   /**
@@ -71,10 +78,10 @@ export class LayerGroupStore {
   /**
    * Add a single layer at the end of the layer group.
    * @param layer Ol layer.
-   * @param layerId id of the layer.
+   * @param layerUid id of the layer.
    */
-  addLayer(layer: OlLayerBase, layerId: string) {
-    if (!this.setupAddLayer(layer, layerId)) {
+  addLayer(layer: OlLayerBase, layerUid: string) {
+    if (!this.setupAddLayer(layer, layerUid)) {
       return;
     }
     this.layerGroup.getLayers().push(layer);
@@ -85,12 +92,12 @@ export class LayerGroupStore {
    * Retrieve a layer currently in the layer group.
    * @returns The matching layer or null.
    */
-  getLayer(layerId: string): OlLayerBase | null {
+  getLayer(layerUid: string): OlLayerBase | null {
     return (
       this.layerGroup
         .getLayers()
         .getArray()
-        .find((layer) => layer.get(CommonProperties.LayerID) === layerId) ||
+        .find((layer) => layer.get(CommonProperties.LayerUid) === layerUid) ||
       null
     );
   }
@@ -137,20 +144,96 @@ export class LayerGroupStore {
    * @returns true if the layer is valid and can be added. False otherwise.
    * @protected
    */
-  protected setupAddLayer(layer: OlLayerBase, layerId: string): boolean {
-    if (isNil(layerId) || isNil(layer) || layerId.length === 0) {
-      let error = `Unable to add layer ${layerId || '<empty>'}.`;
+  protected setupAddLayer(layer: OlLayerBase, layerUid: string): boolean {
+    if (isNil(layerUid) || isNil(layer) || layerUid.length === 0) {
+      let error = `Unable to add layer ${layerUid || '<empty>'}.`;
       if (isNil(layer)) {
         error = `${error} The layer is not defined.`;
       }
       console.error(error);
       return false;
     }
-    if (this.getLayer(layerId)) {
+    if (this.getLayer(layerUid)) {
       return false;
     }
-    layer.set(CommonProperties.LayerID, layerId);
+    layer.set(CommonProperties.LayerUid, layerUid);
     return true;
+  }
+
+  /**
+   * Add a layer group to a specified position in the array of map's
+   * layers.
+   * @protected
+   */
+  protected addLayerGroup(layerGroupUid: string, position: number) {
+    const layerGroup = this.findLayerGroup(layerGroupUid);
+    if (layerGroup) {
+      this.layerGroup = layerGroup;
+      return;
+    }
+    this.layerGroup = new OlLayerGroup({
+      properties: {
+        [CommonProperties.LayerUid]: layerGroupUid,
+      },
+    });
+    insertAtKeepOrder(
+      this.map.getLayers(),
+      this.layerGroup,
+      `olcPosition-${layerGroupUid}`,
+      position
+    );
+  }
+
+  /**
+   * Retrieve a layer group based on its unique id.
+   */
+  protected findLayerGroup(layerUid: string): OlLayerGroup | null {
+    return (
+      (this.map
+        .getLayers()
+        .getArray()
+        .find(
+          (layerGroup) =>
+            layerGroup.get(CommonProperties.LayerUid) === layerUid &&
+            layerGroup instanceof OlLayerGroup
+        ) as OlLayerGroup) || null
+    );
+  }
+
+  /**
+   * @returns A unique observable name.
+   * @protected
+   */
+  protected getObservableName(observableName: string) {
+    const layerGroupUid = this.layerGroup.get(CommonProperties.LayerUid);
+    return this.getObservableNameFromLayerUid(observableName, layerGroupUid);
+  }
+
+  /**
+   * @returns A unique observable name.
+   * @private
+   */
+  private getObservableNameFromLayerUid(
+    observableName: string,
+    layerGroupUid: string
+  ) {
+    return `${observableName}-${layerGroupUid}`;
+  }
+
+  /**
+   * Add layer group observables to the map if it doesn't already exist.
+   * These instances of observables will be never set or removed.
+   * @private
+   */
+  private addObservables(layerGroupUid: string) {
+    const observableName = this.getObservableNameFromLayerUid(
+      this.layerAddedId,
+      layerGroupUid
+    );
+    if (getObservable(this.map, observableName)) {
+      return;
+    }
+    this.map.set(observableName, new Subject<OlLayerBase>());
   }
 
   /**

@@ -6,30 +6,30 @@ import { CommonProperties } from './layer-group-store';
 import OlLayerGroup from 'ol/layer/Group';
 
 describe('BackgroundLayersStore', () => {
-  let store: BackgroundLayerStore;
+  let bgGroup: BackgroundLayerStore;
   let baseLayer: OlLayerBase;
   beforeEach(() => {
     // Here it's safe to use each time another instance of store as it's
     // only internal tests.
-    store = new MapStore().getBackgroundLayerStore();
+    bgGroup = new BackgroundLayerStore(MapStore.createEmptyMap());
     baseLayer = new OlLayerBase({});
   });
 
   it('should toggleVisible', (done) => {
     const secondLayer = new OlLayerBase({});
-    const expectedGroup = getLayerGroup(store, 0).getLayers().getArray();
-    store.addLayer(baseLayer, 'firstLayer');
-    store.addLayer(secondLayer, 'secondLayer');
+    const expectedGroup = getLayerGroup(bgGroup, 0).getLayers().getArray();
+    bgGroup.addLayer(baseLayer, 'firstLayer');
+    bgGroup.addLayer(secondLayer, 'secondLayer');
     expect(expectedGroup.length).toEqual(2);
-    store.toggleVisible('secondLayer');
+    bgGroup.toggleVisible('secondLayer');
     expect(expectedGroup[0].getVisible()).toBeFalsy();
     expect(expectedGroup[1].getVisible()).toBeTruthy();
-    store.toggleVisible('firstLayer');
+    bgGroup.toggleVisible('firstLayer');
     expect(expectedGroup[0].getVisible()).toBeTruthy();
     expect(expectedGroup[1].getVisible()).toBeFalsy();
     // Wait the events to execute this final async test
     let eventsCounter = 0;
-    store.getLayerGroup().on('change', (event) => {
+    bgGroup.getLayerGroup().on('change', (event) => {
       // Two layers = two events.
       eventsCounter++;
       if (eventsCounter === 2) {
@@ -38,12 +38,12 @@ describe('BackgroundLayersStore', () => {
           .getLayers()
           .getArray()
           .find((layer) => layer.getVisible());
-        expect(visibleLayer?.get(CommonProperties.LayerID)).toEqual(
+        expect(visibleLayer?.get(CommonProperties.LayerUid)).toEqual(
           'secondLayer'
         );
         done();
       }
     });
-    store.toggleVisible('secondLayer');
+    bgGroup.toggleVisible('secondLayer');
   });
 });

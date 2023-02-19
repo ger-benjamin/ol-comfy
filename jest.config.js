@@ -10,8 +10,7 @@ module.exports = {
   },
   testRegex: "/src/.*\\.spec.(ts|js)$",
   collectCoverageFrom: [
-    "src/*.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
   ],
   transformIgnorePatterns: [
     "node_modules/(?!(ol)/)", // <- exclude the ol library from not being transformed

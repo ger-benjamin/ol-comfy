@@ -18,16 +18,16 @@ export class Modify {
   }
 
   /**
-   * @returns the interactions.
-   */
-  getInteraction(): OlInteractionModify {
-    return this.modifyInteraction;
-  }
-
-  /**
    * Removes the interaction from the map.
    */
   destroy() {
     this.map.removeInteraction(this.modifyInteraction);
+  }
+
+  /**
+   * @returns the interactions.
+   */
+  getInteraction(): OlInteractionModify {
+    return this.modifyInteraction;
   }
 }

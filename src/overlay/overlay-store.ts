@@ -1,10 +1,10 @@
 import OlMap from 'ol/Map';
 import OlOverlay from 'ol/Overlay';
 
-export const OverlayGroupId = 'overlayGroupId';
+export const OverlayGroupUid = 'olcOverlayGroupUid';
 
 /**
- * Storage for overlays (popups) on the map.
+ * Store and manage overlays (popups) on the map.
  */
 export class OverlayStore {
   constructor(private readonly map: OlMap) {}
@@ -12,30 +12,30 @@ export class OverlayStore {
   /**
    * Add an overlay (with a group id) to the map.
    */
-  addOverlay(overlayGroupId: string, overlay: OlOverlay) {
-    overlay.set(OverlayGroupId, overlayGroupId);
+  addOverlay(overlayGroupUid: string, overlay: OlOverlay) {
+    overlay.set(OverlayGroupUid, overlayGroupUid);
     this.map.addOverlay(overlay);
   }
 
   /**
    * @returns all overlay for a specific group.
    */
-  getOverlays(overlayGroupId: string) {
+  getOverlays(overlayGroupUid: string) {
     return this.map
       .getOverlays()
       .getArray()
-      .filter((overlay) => overlay.get(OverlayGroupId) === overlayGroupId);
+      .filter((overlay) => overlay.get(OverlayGroupUid) === overlayGroupUid);
   }
 
   /**
    * Clear from the map all existing overlays from a group.
    */
-  clearOverlaysByGroupId(overlayGroupId: string) {
+  clearOverlaysByGroupId(overlayGroupUid: string) {
     this.map
       .getOverlays()
       .getArray()
       .filter(
-        (overlay: OlOverlay) => overlay.get(OverlayGroupId) === overlayGroupId
+        (overlay: OlOverlay) => overlay.get(OverlayGroupUid) === overlayGroupUid
       )
       .forEach((overlay: OlOverlay) => this.map.removeOverlay(overlay));
   }

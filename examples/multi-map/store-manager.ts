@@ -1,19 +1,20 @@
 import { MapStore } from '../../src/map/map-store';
+import OlMap from 'ol/Map';
 
 interface Store {
-  map?: MapStore;
+  map?: OlMap;
 }
 
 /**
- * A instance that create, provide and delete store.
+ * An instance that create, provide and delete store.
  * Exposed as a singleton, it allows you to manage easily all of your stores.
  */
 export class StoreManager {
   private stores: { [key: string]: Store } = {};
 
-  getMapStore(storesId: string): MapStore {
+  getMapStore(storesId: string): OlMap {
     this.maybeCreateStores(storesId);
-    return this.stores[storesId].map as MapStore;
+    return this.stores[storesId].map as OlMap;
   }
 
   destroyStores(storesId: string) {
@@ -30,7 +31,7 @@ export class StoreManager {
       return;
     }
     this.stores[storesId] = {};
-    this.stores[storesId].map = new MapStore();
+    this.stores[storesId].map = MapStore.createEmptyMap();
   }
 }
 

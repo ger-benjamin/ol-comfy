@@ -1,32 +1,34 @@
-import OlLayerGroup from 'ol/layer/Group';
 import OlMap from 'ol/Map';
 import {
-  LayerGroupStore,
   CommonProperties,
-  LayerGroups,
+  LayerGroupOptions,
+  LayerGroupStore,
 } from './layer-group-store';
+import { isNil } from 'lodash';
+
+export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
 
 /**
- * Storage for the state of the background layers in the map.
+ * Manage background layers in the map.
+ * Each instance must have a unique name (one cas use the default name).
+ * Default position is 0.
  */
 export class BackgroundLayerStore extends LayerGroupStore {
-  constructor(map: OlMap) {
-    super(map);
-    this.layerGroup = new OlLayerGroup({
-      properties: {
-        [CommonProperties.LayerID]: LayerGroups.Background,
-      },
-    });
-    map.addLayer(this.layerGroup);
+  constructor(map: OlMap, options: LayerGroupOptions = {}) {
+    const layerGroupUid =
+      options[CommonProperties.LayerUid] || DefaultLayerBGGroupName;
+    super(map, layerGroupUid);
+    const position = isNil(options.position) ? 0 : options.position;
+    this.addLayerGroup(layerGroupUid, position);
   }
 
   /**
    * Set one background layer as visible, all others as not visible
    */
-  toggleVisible(layerId: string) {
+  toggleVisible(layerUid: string) {
     const layers = this.layerGroup.getLayers().getArray();
     const foundLayer = layers.find(
-      (layer) => layer.get(CommonProperties.LayerID) === layerId
+      (layer) => layer.get(CommonProperties.LayerUid) === layerUid
     );
     layers.forEach((layer) => {
       layer.setVisible(layer === foundLayer);

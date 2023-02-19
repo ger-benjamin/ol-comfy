@@ -13,5 +13,5 @@ export * from './layer/overlay-layer-store';
 export * from './layer/utils';
 export * from './map/map-store';
 export * from './overlay/overlay-store';
-export * from './utils';
+export * from './map/utils';
 export * from './view/view-store';
