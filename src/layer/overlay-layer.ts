@@ -1,10 +1,5 @@
-import OlLayerGroup from 'ol/layer/Group';
 import OlMap from 'ol/Map';
-import {
-  CommonProperties,
-  LayerGroups,
-  LayerGroupStore,
-} from './layer-group-store';
+import { CommonProperties, LayerGroup, LayerGroupOptions } from './layer-group';
 import {
   createEmpty as olCreateEmptyExtent,
   extend as olExtend,
@@ -17,14 +12,17 @@ import OlSourceVector from 'ol/source/Vector';
 import { Geometry as OlGeometry } from 'ol/geom';
 import OlCollection from 'ol/Collection';
 import OlSourceCluster from 'ol/source/Cluster';
-import { has } from 'lodash';
+import { has, isNil } from 'lodash';
 import { Subject } from 'rxjs';
+import { getObservable } from '../map/utils';
+
+export const DefaultOverlayLayerGroupName = 'olcOverlayLayerGroup';
 
 /**
  * Feature selected event definition.
  */
 export interface FeatureSelected {
-  [CommonProperties.LayerID]: string;
+  [CommonProperties.LayerUid]: string;
   selected: OlFeature<OlGeometry>[];
   deselected: OlFeature<OlGeometry>[];
 }
@@ -33,27 +31,50 @@ export interface FeatureSelected {
  * Event definition for change in feature property
  */
 export interface FeaturePropertyChanged {
-  [CommonProperties.LayerID]: string;
+  [CommonProperties.LayerUid]: string;
   propertyKey: string;
 }
 
 /**
- * Storage for the state of the overlay layers in the map.
+ * Manage overlay layers in the map.
+ * Each instance must have a unique name (one cas use the default name).
+ * Default position is 20.
  */
-export class OverlayLayerStore extends LayerGroupStore {
-  readonly featuresSelected: Subject<FeatureSelected>;
-  readonly featuresPropertyChanged: Subject<FeaturePropertyChanged>;
+export class OverlayLayer extends LayerGroup {
+  private readonly featureSelectedId = 'olcOverlayLayerFeatureSelected';
+  private readonly featuresPropertyChangedId =
+    'olcOverlayLayerFeaturePropertyChanged';
 
-  constructor(map: OlMap) {
-    super(map);
-    this.layerGroup = new OlLayerGroup({
-      properties: {
-        [CommonProperties.LayerID]: LayerGroups.Overlay,
-      },
-    });
-    map.addLayer(this.layerGroup);
-    this.featuresSelected = new Subject<FeatureSelected>();
-    this.featuresPropertyChanged = new Subject<FeaturePropertyChanged>();
+  constructor(map: OlMap, options: LayerGroupOptions = {}) {
+    const layerGroupUid =
+      options[CommonProperties.LayerUid] || DefaultOverlayLayerGroupName;
+    super(map, layerGroupUid);
+    const position = isNil(options.position) ? 20 : options.position;
+    this.addLayerGroup(layerGroupUid, position);
+    this.addOverlayLayerObservables();
+  }
+
+  /**
+   * Add feature selected observable on this group. To call manually on
+   * feature selection.
+   * See emitSelectFeatures.
+   */
+  get featuresSelected(): Subject<FeatureSelected> {
+    return getObservable(
+      this.map,
+      this.getObservableName(this.featureSelectedId)
+    ) as Subject<FeatureSelected>;
+  }
+
+  /**
+   * Add feature property changed observable on this group.
+   * See setFeaturesProperty.
+   */
+  get featuresPropertyChanged(): Subject<FeaturePropertyChanged> {
+    return getObservable(
+      this.map,
+      this.getObservableName(this.featuresPropertyChangedId)
+    ) as Subject<FeaturePropertyChanged>;
   }
 
   /**
@@ -61,9 +82,9 @@ export class OverlayLayerStore extends LayerGroupStore {
    * typing.
    */
   getVectorLayer(
-    layerId: string
+    layerUid: string
   ): OlLayerVector<OlSourceVector<OlGeometry>> | null {
-    return super.getLayer(layerId) as OlLayerVector<
+    return super.getLayer(layerUid) as OlLayerVector<
       OlSourceVector<OlGeometry>
     > | null;
   }
@@ -72,8 +93,8 @@ export class OverlayLayerStore extends LayerGroupStore {
    * Get layer but typed as vector layer with cluster source. No check, only
    * typing.
    */
-  getClusterLayer(layerId: string): OlLayerVector<OlSourceCluster> | null {
-    return super.getLayer(layerId) as OlLayerVector<OlSourceCluster> | null;
+  getClusterLayer(layerUid: string): OlLayerVector<OlSourceCluster> | null {
+    return super.getLayer(layerUid) as OlLayerVector<OlSourceCluster> | null;
   }
 
   /**
@@ -81,8 +102,8 @@ export class OverlayLayerStore extends LayerGroupStore {
    *     cluster source, the returned source is the vector source inside the
    *     cluster source.
    */
-  getVectorSource(layerId: string): OlSourceVector<OlGeometry> | null {
-    const layer = this.getVectorLayer(layerId);
+  getVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
+    const layer = this.getVectorLayer(layerUid);
     if (layer === null) {
       return null;
     }
@@ -98,27 +119,27 @@ export class OverlayLayerStore extends LayerGroupStore {
   /**
    * Add features in the target overlay layer. Does
    * nothing with empty array.
-   * @param layerId the id of the layer to add features into.
+   * @param layerUid the id of the layer to add features into.
    * @param features the features to add to the layer.
    */
-  addFeatures(layerId: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerId);
+  addFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
+    const source = this.getVectorSource(layerUid);
     if (!source || !features.length) {
       return;
     }
     // Avoid already exists errors.
-    this.removeFeatures(layerId, features);
+    this.removeFeatures(layerUid, features);
     source.addFeatures(features);
   }
 
   /**
    * Remove features from the target overlay layer. Does
    * nothing with empty array.
-   * @param layerId the id of the layer to remove features from.
+   * @param layerUid the id of the layer to remove features from.
    * @param features the features to remove to the layer.
    */
-  removeFeatures(layerId: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerId);
+  removeFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
+    const source = this.getVectorSource(layerUid);
     if (!source || !features.length) {
       return;
     }
@@ -131,11 +152,11 @@ export class OverlayLayerStore extends LayerGroupStore {
 
   /**
    * Set features in the target overlay layer.
-   * @param layerId the id of the layer to remove features from.
+   * @param layerUid the id of the layer to remove features from.
    * @param features the features to replace existing ones in the layer.
    */
-  setFeatures(layerId: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerId);
+  setFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
+    const source = this.getVectorSource(layerUid);
     if (!source) {
       return;
     }
@@ -144,13 +165,13 @@ export class OverlayLayerStore extends LayerGroupStore {
   }
 
   /**
-   * @param layerId the id of the layer to get the extent from.
+   * @param layerUid the id of the layer to get the extent from.
    * @returns The extent (not empty) of all features in the target layer or
    *   null.
    */
-  getLayerFeaturesExtent(layerId: string): OlExtent | null {
+  getLayerFeaturesExtent(layerUid: string): OlExtent | null {
     const extent =
-      this.getFeaturesCollection(layerId)
+      this.getFeaturesCollection(layerUid)
         ?.getArray()
         .reduce(
           (currentExtent, feature) =>
@@ -172,7 +193,7 @@ export class OverlayLayerStore extends LayerGroupStore {
         (currentExtent, layer) =>
           olExtend(
             currentExtent,
-            this.getLayerFeaturesExtent(layer.get(CommonProperties.LayerID)) ??
+            this.getLayerFeaturesExtent(layer.get(CommonProperties.LayerUid)) ??
               []
           ),
         olCreateEmptyExtent()
@@ -181,15 +202,15 @@ export class OverlayLayerStore extends LayerGroupStore {
   }
 
   /**
-   * @param layerId id of the layer.
+   * @param layerUid id of the layer.
    * @returns The collections of features in the layer or null. Do not use
    * collection to add/remove features. It's slow. Use related methods on the
    * source directly.
    */
   getFeaturesCollection(
-    layerId: string
+    layerUid: string
   ): OlCollection<OlFeature<OlGeometry>> | null {
-    const source = this.getVectorSource(layerId);
+    const source = this.getVectorSource(layerUid);
     return source?.getFeaturesCollection() || null;
   }
 
@@ -197,12 +218,12 @@ export class OverlayLayerStore extends LayerGroupStore {
    * Emit a select feature event.
    */
   emitSelectFeatures(
-    layerId: string,
+    layerUid: string,
     selected: OlFeature<OlGeometry>[],
     deselected: OlFeature<OlGeometry>[]
   ) {
     this.featuresSelected.next({
-      [CommonProperties.LayerID]: layerId,
+      [CommonProperties.LayerUid]: layerUid,
       selected,
       deselected,
     });
@@ -212,7 +233,7 @@ export class OverlayLayerStore extends LayerGroupStore {
    * Set a property of every given feature with the same value.
    */
   setFeaturesProperty(
-    layerId: string,
+    layerUid: string,
     features: OlFeature<OlGeometry>[],
     key: string,
     value: unknown
@@ -220,25 +241,46 @@ export class OverlayLayerStore extends LayerGroupStore {
     features.forEach((feature) => {
       feature.set(key, value, true);
     });
-    this.getLayer(layerId)?.changed();
+    this.getLayer(layerUid)?.changed();
     this.featuresPropertyChanged.next({
-      [CommonProperties.LayerID]: layerId,
+      [CommonProperties.LayerUid]: layerUid,
       propertyKey: key,
     });
   }
 
   /**
-   * @param layerId id of the layer
+   * @param layerUid id of the layer
    * @returns The cluster features in the layer or null
    * Do not modify or save cluster features as they are recreated dynamically
    * on each map rendering (move, zoom, etc). It's not possible to rely on
    *     this object.
    */
-  getClusterFeatures(layerId: string): OlFeature<OlGeometry>[] | null {
-    const layer = this.getClusterLayer(layerId);
+  getClusterFeatures(layerUid: string): OlFeature<OlGeometry>[] | null {
+    const layer = this.getClusterLayer(layerUid);
     if (layer === null) {
       return null;
     }
     return layer.getSource().getFeatures();
+  }
+
+  /**
+   * Add overlay layer observables to the map if it doesn't already exist.
+   * These instances of observables will be never set or removed.
+   * @private
+   */
+  private addOverlayLayerObservables() {
+    if (
+      getObservable(this.map, this.getObservableName(this.featureSelectedId))
+    ) {
+      return;
+    }
+    this.map.set(
+      this.getObservableName(this.featureSelectedId),
+      new Subject<FeatureSelected>()
+    );
+    this.map.set(
+      this.getObservableName(this.featuresPropertyChangedId),
+      new Subject<FeaturePropertyChanged>()
+    );
   }
 }

@@ -18,16 +18,16 @@ export class Translate {
   }
 
   /**
-   * @returns the interactions.
-   */
-  getInteraction(): OlInteractionTranslate {
-    return this.translateInteraction;
-  }
-
-  /**
    * Removes the interaction from the map.
    */
   destroy() {
     this.map.removeInteraction(this.translateInteraction);
+  }
+
+  /**
+   * @returns the interactions.
+   */
+  getInteraction(): OlInteractionTranslate {
+    return this.translateInteraction;
   }
 }

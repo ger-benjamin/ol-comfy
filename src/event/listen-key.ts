@@ -20,17 +20,17 @@ export class ListenKey {
   }
 
   /**
-   * Is the key currently pressed.
-   */
-  isKeyDown(): boolean {
-    return this.keyDown;
-  }
-
-  /**
    * Destroy listeners. The instance is then useless.
    */
   destroy() {
     unByKeyAll(this.eventKeys);
+  }
+
+  /**
+   * Is the key currently pressed.
+   */
+  isKeyDown(): boolean {
+    return this.keyDown;
   }
 
   /**

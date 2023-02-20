@@ -16,16 +16,16 @@ export class Snap {
   }
 
   /**
-   * @returns the interactions.
-   */
-  getInteraction(): OlInteractionSnap {
-    return this.snapInteraction;
-  }
-
-  /**
    * Removes the interaction from the map.
    */
   destroy() {
     this.map.removeInteraction(this.snapInteraction);
+  }
+
+  /**
+   * @returns the interactions.
+   */
+  getInteraction(): OlInteractionSnap {
+    return this.snapInteraction;
   }
 }

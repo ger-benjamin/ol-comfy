@@ -3,6 +3,7 @@ import OlLayerTile from 'ol/layer/Tile';
 import { OSM } from 'ol/source';
 import storeManager from './store-manager';
 import OlControlZoom from 'ol/control/Zoom';
+import { BackgroundLayer, Map } from '../../src';
 
 // Globally accessible values you need:
 const storesId1 = 'store-1';
@@ -28,19 +29,18 @@ const view2 = new OlView({
 
 // Below: Use ol-comfy.
 // Your controller initializing multiple map.
-const store1 = storeManager.getMapStore(storesId1);
-store1.getMap().setTarget('map1');
-store1.getViewStore().setMapView(view1);
-store1
-  .getBackgroundLayerStore()
-  .addLayer(backgroundlayer1, backgroundlLayer1Id);
-let store2 = storeManager.getMapStore(storesId2);
-store2.getMap().setTarget('map2');
-store2.getViewStore().setMapView(view2);
-store2
-  .getBackgroundLayerStore()
-  .addLayer(backgroundlayer2, backgroundlLayer2Id);
+const map1 = storeManager.getMapStore(storesId1);
+map1.setTarget('map1');
+map1.setView(view1);
+let backgroundLayer = new BackgroundLayer(map1);
+backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
+let map2 = storeManager.getMapStore(storesId2);
+map2.setTarget('map2');
+map2.setView(view2);
+backgroundLayer = new BackgroundLayer(map2);
+backgroundLayer.addLayer(backgroundlayer2, backgroundlLayer2Id);
 
 // A component adding a control on one map.
-store2 = storeManager.getMapStore(storesId2);
-store2.addControl('scalebare', new OlControlZoom());
+map2 = storeManager.getMapStore(storesId2);
+const olcMap = new Map(map2);
+olcMap.addControl('scalebare', new OlControlZoom());

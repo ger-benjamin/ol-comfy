@@ -4,32 +4,41 @@ import { Extent as OlExtent } from 'ol/extent';
 import { isNil } from 'lodash';
 import { getPointResolution } from 'ol/proj';
 import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
+import { EventsKey } from 'ol/events';
+import { unByKeyAll } from '../event/utils';
 
 /**
- * Storage for the state of the view in the map.
+ * Helpers for the view in the map.
+ * With the "listen" option, this class will automatically keep the used map's
+ * view if the map's view is set.
  */
-export class ViewStore {
+export class View {
+  private readonly eventsKeys: EventsKey[] = [];
   private readonly map: OlMap;
   private view: OlView;
 
-  constructor(map: OlMap) {
+  constructor(map: OlMap, listen = true) {
     this.map = map;
     this.view = this.map.getView();
+    if (listen) {
+      this.eventsKeys.push(
+        this.map.on('change:view', () => (this.view = this.map.getView()))
+      );
+    }
   }
 
   /**
-   * @returns the map's view.
+   * @returns the Ol view.
    */
   getView(): OlView {
     return this.view;
   }
 
   /**
-   * Set the map's view.
+   * Removes the map view change listener.
    */
-  setMapView(olView: OlView) {
-    this.map.setView(olView);
-    this.view = this.map.getView();
+  destroy() {
+    unByKeyAll(this.eventsKeys);
   }
 
   /**

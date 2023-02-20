@@ -2,13 +2,13 @@ import OlMap from 'ol/Map';
 import OlInteractionDraw from 'ol/interaction/Draw';
 
 /** Uid property key for the draw interaction. */
-export const DrawInteractionUidKey = 'interaction-draw-uid';
+export const DrawInteractionUidKey = 'olcInteractionDrawUid';
 /** Part of the draw interaction uid. */
-export const DrawInteractionUid = 'interaction-draw-uid';
+export const DrawInteractionUid = 'olcInteractionDrawUid';
 /** Group prop. key for the draw interaction. To identify such interaction. */
-export const DrawInteractionGroupKey = 'interaction-draw-group';
+export const DrawInteractionGroupKey = 'olcInteractionDrawGroup';
 /** Group prop. value for the draw interaction. To identify such interaction. */
-export const DrawInteractionGroupValue = 'standard-draw';
+export const DrawInteractionGroupValue = 'olcStandardDraw';
 
 /**
  * Parent class able to enable drawing on an OpenLayers Map.
@@ -23,6 +23,13 @@ export class Draw {
     if (interaction) {
       this.interaction = interaction;
     }
+  }
+
+  /**
+   * Remove the interaction from the map.
+   */
+  destroy() {
+    this.map.removeInteraction(this.interaction);
   }
 
   /**
@@ -49,13 +56,6 @@ export class Draw {
     } else {
       this.interaction.setActive(false);
     }
-  }
-
-  /**
-   * Remove the interaction from the map.
-   */
-  destroy() {
-    this.map.removeInteraction(this.interaction);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { MapStore } from '../../src/map/map-store';
+import { Map } from '../../src/map/map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerVector from 'ol/layer/Vector';
@@ -18,7 +18,7 @@ import { Translate } from '../../src/interaction/translate';
 import { Snap } from '../../src/interaction/snap';
 import { MapBrowserEvent } from 'ol';
 import { EventsKey } from 'ol/events';
-import { EmptyStyle } from '../../src';
+import { BackgroundLayer, EmptyStyle, OverlayLayer } from '../../src';
 import OlCircle from 'ol/style/Circle';
 import OlFill from 'ol/style/Fill';
 import OlStroke from 'ol/style/Stroke';
@@ -26,7 +26,7 @@ import { unByKeyAll } from '../../src/event/utils';
 import OlGeomPoint from 'ol/geom/Point';
 
 // Globally accessible values you need:
-const mapStore = new MapStore();
+const map = Map.createEmptyMap();
 const layer1Id = 'layer1-id';
 const backgroundlLayer1Id = 'background1-id';
 const pointInteractionId = 'point-interaction-uid';
@@ -45,22 +45,21 @@ const print = (msg) => {
   document.querySelector('#console .text').textContent = msg;
 };
 
-// Below: Use ol-comfy.
 // Your controller initializing the map.
-const viewStore = mapStore.getViewStore();
-viewStore.setMapView(
+map.setView(
   new OlView({
     center: [0, 0],
     zoom: 2,
   })
 );
-mapStore.getMap().setTarget('map');
+map.setTarget('map');
 
+// Below: Use ol-comfy.
 // Your controller initializing the layers.
-let overlayLayerStore = mapStore.getOverlayLayerStore();
-overlayLayerStore.addLayer(layer1, layer1Id);
-const backgroundLayerStore = mapStore.getBackgroundLayerStore();
-backgroundLayerStore.addLayer(backgroundlayer1, backgroundlLayer1Id);
+let overlayLayer = new OverlayLayer(map);
+overlayLayer.addLayer(layer1, layer1Id);
+const backgroundLayer = new BackgroundLayer(map);
+backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
 
 // A component wanting to enable draw.
 let drawPoint: DrawBasicShape | undefined;
@@ -78,11 +77,10 @@ const eventKeys: EventsKey[] = [];
  */
 const setupDrawing = () => {
   // Setup the layer to draw in.
-  overlayLayerStore = mapStore.getOverlayLayerStore();
-  const drawLayer = overlayLayerStore?.getLayer(layer1Id) as
+  overlayLayer = new OverlayLayer(map);
+  const drawLayer = overlayLayer?.getLayer(layer1Id) as
     | OlLayerVector<OlSourceVector<OlGeometry>>
     | undefined;
-  const map = mapStore?.getMap();
   const source = drawLayer?.getSource();
   if (!drawLayer || !source || !map) {
     console.error('No layer source or no map to draw in.');
@@ -167,13 +165,16 @@ const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
   mapBrowserEvent.map.forEachFeatureAtPixel(
     mapBrowserEvent.pixel,
     (feature: OlFeature<OlGeometry> | RenderFeature) => {
-      if (!overlayLayerStore || feature instanceof RenderFeature) {
+      if (!overlayLayer || feature instanceof RenderFeature) {
         return;
       }
       const features =
-        overlayLayerStore.getFeaturesCollection(layer1Id)?.getArray() || [];
+        overlayLayer.getFeaturesCollection(layer1Id)?.getArray() || [];
       if (features.includes(feature)) {
-        overlayLayerStore.removeFeatures(layer1Id, [feature]);
+        overlayLayer.removeFeatures(layer1Id, [feature]);
+        // Make the pointer to be updated in Firefox;
+        modify.getInteraction().setActive(false);
+        modify.getInteraction().setActive(true);
       }
     }
   );
