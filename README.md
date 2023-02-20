@@ -16,8 +16,3 @@ I've initially written this code for a project. This code is "legacy" and next s
 lighter to implement, extend, ... More comfy to use.
 
 Works already well, but please, wait a bit before to use it.
-
-### TODO
-
-- set and add test
-- rename files

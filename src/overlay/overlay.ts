@@ -6,7 +6,7 @@ export const OverlayGroupUid = 'olcOverlayGroupUid';
 /**
  * Store and manage overlays (popups) on the map.
  */
-export class OverlayStore {
+export class Overlay {
   constructor(private readonly map: OlMap) {}
 
   /**

@@ -1,9 +1,5 @@
 import OlMap from 'ol/Map';
-import {
-  CommonProperties,
-  LayerGroupOptions,
-  LayerGroupStore,
-} from './layer-group-store';
+import { CommonProperties, LayerGroup, LayerGroupOptions } from './layer-group';
 import { isNil } from 'lodash';
 
 export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
@@ -13,7 +9,7 @@ export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 0.
  */
-export class BackgroundLayerStore extends LayerGroupStore {
+export class BackgroundLayer extends LayerGroup {
   constructor(map: OlMap, options: LayerGroupOptions = {}) {
     const layerGroupUid =
       options[CommonProperties.LayerUid] || DefaultLayerBGGroupName;

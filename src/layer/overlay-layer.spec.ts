@@ -2,19 +2,17 @@ import OlLayerVector from 'ol/layer/Vector';
 import OlSourceVector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
-import { OverlayLayerStore } from './overlay-layer-store';
-import { MapStore } from '../map/map-store';
-import { CommonProperties } from './layer-group-store';
+import { OverlayLayer } from './overlay-layer';
+import { Map } from '../map/map';
+import { CommonProperties } from './layer-group';
 import OlSourceCluster from 'ol/source/Cluster';
 import OlCollection from 'ol/Collection';
 
 describe('OverlayLayersStore', () => {
-  let overlayLayerGroup: OverlayLayerStore;
+  let overlayLayerGroup: OverlayLayer;
   let overlayLayer: OlLayerVector<any>;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's
-    // only internal tests.
-    overlayLayerGroup = new OverlayLayerStore(MapStore.createEmptyMap());
+    overlayLayerGroup = new OverlayLayer(Map.createEmptyMap());
     overlayLayer = new OlLayerVector({
       source: new OlSourceVector({
         useSpatialIndex: false,

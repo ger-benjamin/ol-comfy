@@ -1,4 +1,4 @@
-import { MapStore } from '../../src/map/map-store';
+import { Map } from '../../src/map/map';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerVector from 'ol/layer/Vector';
@@ -18,7 +18,7 @@ import { Translate } from '../../src/interaction/translate';
 import { Snap } from '../../src/interaction/snap';
 import { MapBrowserEvent } from 'ol';
 import { EventsKey } from 'ol/events';
-import { BackgroundLayerStore, EmptyStyle, OverlayLayerStore } from '../../src';
+import { BackgroundLayer, EmptyStyle, OverlayLayer } from '../../src';
 import OlCircle from 'ol/style/Circle';
 import OlFill from 'ol/style/Fill';
 import OlStroke from 'ol/style/Stroke';
@@ -26,7 +26,7 @@ import { unByKeyAll } from '../../src/event/utils';
 import OlGeomPoint from 'ol/geom/Point';
 
 // Globally accessible values you need:
-const map = MapStore.createEmptyMap();
+const map = Map.createEmptyMap();
 const layer1Id = 'layer1-id';
 const backgroundlLayer1Id = 'background1-id';
 const pointInteractionId = 'point-interaction-uid';
@@ -56,9 +56,9 @@ map.setTarget('map');
 
 // Below: Use ol-comfy.
 // Your controller initializing the layers.
-let overlayLayer = new OverlayLayerStore(map);
+let overlayLayer = new OverlayLayer(map);
 overlayLayer.addLayer(layer1, layer1Id);
-const backgroundLayer = new BackgroundLayerStore(map);
+const backgroundLayer = new BackgroundLayer(map);
 backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
 
 // A component wanting to enable draw.
@@ -77,7 +77,7 @@ const eventKeys: EventsKey[] = [];
  */
 const setupDrawing = () => {
   // Setup the layer to draw in.
-  overlayLayer = new OverlayLayerStore(map);
+  overlayLayer = new OverlayLayer(map);
   const drawLayer = overlayLayer?.getLayer(layer1Id) as
     | OlLayerVector<OlSourceVector<OlGeometry>>
     | undefined;

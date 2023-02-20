@@ -1,19 +1,17 @@
 import OlView from 'ol/View';
-import { MapStore } from '../map/map-store';
-import { ViewStore } from './view-store';
+import { Map } from '../map/map';
+import { View } from './view';
 import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
 
 /* Standard OpenLayers animation duration is 250ms. Add 50 more to be sure. */
 const ANIMATION_WAIT_TIME = OPENLAYERS_ANIMATION_DELAY + 50;
 
 describe('ViewStore', () => {
-  let olcView: ViewStore;
+  let olcView: View;
 
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's
-    // only internal tests.
-    const map = MapStore.createEmptyMap();
-    olcView = new ViewStore(map);
+    const map = Map.createEmptyMap();
+    olcView = new View(map);
     // Set view after assigning the view. The view should be this one in the
     // ol-comfy view.
     map.setView(new OlView({ center: [0, 0], zoom: 2 }));

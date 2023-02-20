@@ -1,9 +1,5 @@
 import OlMap from 'ol/Map';
-import {
-  CommonProperties,
-  LayerGroupOptions,
-  LayerGroupStore,
-} from './layer-group-store';
+import { CommonProperties, LayerGroup, LayerGroupOptions } from './layer-group';
 import {
   createEmpty as olCreateEmptyExtent,
   extend as olExtend,
@@ -44,7 +40,7 @@ export interface FeaturePropertyChanged {
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 20.
  */
-export class OverlayLayerStore extends LayerGroupStore {
+export class OverlayLayer extends LayerGroup {
   private readonly featureSelectedId = 'olcOverlayLayerFeatureSelected';
   private readonly featuresPropertyChangedId =
     'olcOverlayLayerFeaturePropertyChanged';

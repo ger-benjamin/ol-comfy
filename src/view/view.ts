@@ -12,7 +12,7 @@ import { unByKeyAll } from '../event/utils';
  * With the "listen" option, this class will automatically keep the used map's
  * view if the map's view is set.
  */
-export class ViewStore {
+export class View {
   private readonly eventsKeys: EventsKey[] = [];
   private readonly map: OlMap;
   private view: OlView;

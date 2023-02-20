@@ -36,7 +36,7 @@ export interface LayerGroupOptions {
  * Parent (abstract) class for layer group, helps to manipulate one layer group.
  * The child class must start by setting the layerGroup.
  */
-export class LayerGroupStore {
+export class LayerGroup {
   private readonly layerAddedId = 'olcLayerAdded';
   protected readonly map: OlMap;
   protected layerGroup: OlLayerGroup;

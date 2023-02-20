@@ -3,13 +3,16 @@ import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import OlMap from 'ol/Map';
 
-export const getMap = (store: any): OlMap => {
-  return store.map as OlMap;
+export const getMap = (olcClass: any): OlMap => {
+  return olcClass.map as OlMap;
 };
 
 /** Index 0 for background, 1 for overlay layers. */
-export const getLayerGroup = (store: unknown, index: number): OlLayerGroup => {
-  return getMap(store).getLayers().getArray()[index] as OlLayerGroup;
+export const getLayerGroup = (
+  olcClass: unknown,
+  index: number
+): OlLayerGroup => {
+  return getMap(olcClass).getLayers().getArray()[index] as OlLayerGroup;
 };
 
 export const createDummyFeatures = (size: number): OlFeature<OlGeomPoint>[] => {

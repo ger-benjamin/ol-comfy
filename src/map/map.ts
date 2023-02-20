@@ -6,7 +6,7 @@ export const ControlUidKey = 'olcControlUid';
 /**
  * Provides helper for OL map.
  */
-export class MapStore {
+export class Map {
   constructor(private readonly map: OlMap) {}
 
   /**

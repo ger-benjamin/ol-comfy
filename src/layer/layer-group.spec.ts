@@ -1,19 +1,17 @@
 import OlLayerBase from 'ol/layer/Base';
-import { MapStore } from '../map/map-store';
-import { LayerGroupStore } from './layer-group-store';
+import { Map } from '../map/map';
+import { LayerGroup } from './layer-group';
 import { getLayerGroup } from '../test/test-data';
 import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
-import { BackgroundLayerStore } from './background-layer-store';
+import { BackgroundLayer } from './background-layer';
 
 describe('LayersStore', () => {
-  let layerGroup: LayerGroupStore;
+  let layerGroup: LayerGroup;
   let baseLayer: OlLayerBase;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of storeMap as it's
-    // only internal tests. Use one backgroundLayerStore to test
-    // LayerGroupStore (parent).
-    layerGroup = new BackgroundLayerStore(MapStore.createEmptyMap());
+    // Use one backgroundLayer to test LayerGroup (parent).
+    layerGroup = new BackgroundLayer(Map.createEmptyMap());
     baseLayer = new OlLayerBase({});
   });
 

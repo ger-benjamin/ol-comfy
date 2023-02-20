@@ -1,12 +1,10 @@
-import { MapStore } from './map-store';
+import { Map } from './map';
 import { ScaleLine } from 'ol/control';
 
 describe('MapStore', () => {
-  let olcMap: MapStore;
+  let olcMap: Map;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's
-    // only internal tests.
-    olcMap = new MapStore(MapStore.createEmptyMap());
+    olcMap = new Map(Map.createEmptyMap());
   });
 
   it('should be created and instanced', () => {
@@ -15,8 +13,6 @@ describe('MapStore', () => {
     expect(olcMap.getMap().getControls().getLength()).toEqual(0);
     expect(olcMap.getMap().getLayers().getLength()).toEqual(0);
   });
-
-  // 'getAttributions' is already tested in layers-store
 
   it('should add control to the map', () => {
     const controlId = 'test_control';

@@ -1,4 +1,4 @@
-import { MapStore } from '../../src/map/map-store';
+import { Map } from '../../src/map/map';
 import OlMap from 'ol/Map';
 
 interface Store {
@@ -31,7 +31,7 @@ export class StoreManager {
       return;
     }
     this.stores[storesId] = {};
-    this.stores[storesId].map = MapStore.createEmptyMap();
+    this.stores[storesId].map = Map.createEmptyMap();
   }
 }
 

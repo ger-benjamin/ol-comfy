@@ -1,16 +1,14 @@
 import OlOverlay from 'ol/Overlay';
-import { MapStore } from '../map/map-store';
-import { OverlayStore } from './overlay-store';
+import { Map } from '../map/map';
+import { Overlay } from './overlay';
 import OlMap from 'ol/Map';
 
 describe('OverlayStore', () => {
   let map: OlMap;
-  let overlayLayerGroup: OverlayStore;
+  let overlayLayerGroup: Overlay;
   beforeEach(() => {
-    // Here it's safe to use each time another instance of store as it's
-    // only internal tests.
-    map = MapStore.createEmptyMap();
-    overlayLayerGroup = new OverlayStore(map);
+    map = Map.createEmptyMap();
+    overlayLayerGroup = new Overlay(map);
   });
 
   it('should add, get and remove overlay to/from the map', () => {

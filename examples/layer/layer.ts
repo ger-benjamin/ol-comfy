@@ -1,5 +1,5 @@
-import { MapStore } from '../../src/map/map-store';
-import { CommonProperties } from '../../src/layer/layer-group-store';
+import { Map } from '../../src/map/map';
+import { CommonProperties } from '../../src/layer/layer-group';
 import OlView from 'ol/View';
 import OlLayerTile from 'ol/layer/Tile';
 import OlLayerVector from 'ol/layer/Vector';
@@ -8,12 +8,12 @@ import OlCollection from 'ol/Collection';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import { OSM } from 'ol/source';
-import { BackgroundLayerStore, OverlayLayerStore } from '../../src';
+import { BackgroundLayer, OverlayLayer } from '../../src';
 
 // Globally accessible values you need:
 const layer1Id = 'layer1-id';
 const backgroundlLayer1Id = 'background1-id';
-const map = MapStore.createEmptyMap();
+const map = Map.createEmptyMap();
 
 // Setup example.
 const layer1 = new OlLayerVector({
@@ -43,9 +43,9 @@ map.setTarget('map');
 
 // Below: Use ol-comfy.
 // Your controller initializing the layers.
-const overlayLayer = new OverlayLayerStore(map);
+const overlayLayer = new OverlayLayer(map);
 overlayLayer.addLayer(layer1, layer1Id);
-const backgroundLayer = new BackgroundLayerStore(map);
+const backgroundLayer = new BackgroundLayer(map);
 backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
 
 // A component wanting to know changes on features for a specific layer.
