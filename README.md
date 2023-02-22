@@ -2,17 +2,28 @@
 
 [![CI](https://github.com/ger-benjamin/ol-comfy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ger-benjamin/ol-comfy/actions/workflows/ci.yml)
 
-Comfortable and convenient Openlayers shortcuts for standard usage.
+Comfortable and convenient Openlayers helpers for standard usages.
 
-This library provides a good help to answer common Openlayers needs in a web application using web-components. Some features:
+This library provides a good help to answer common Openlayers needs in a web application using web-components:
 
-- Adds utils Openlayers functions
-- Adds identifier to layer, interaction, control... to be able to retrieve it in every component.
-- Add some observables.
-- Simplify drawing (enable one tool at once, manage interactions).
-- Not constraining architecture: takes only what you need, extends what you need.
+- Adds identifier to layers, interactions and controls to be able to get and mange them in every component.
+- Add some observables for features and for layer-group. They are stored stably in the map and accessible without worrying about
+  the observed layer or feature.
+- Simplify drawing: enable one tool at once, manage interactions (create, store, destroy).
+- Add some utils, shortcut and helpers function.
 
-I've initially written this code for a project. This code is "legacy" and next step will be to untangle it to make it easier and
-lighter to implement, extend, ... More comfy to use.
+Ol-Comfy is built in a non-binding manner: take only what you need, extend what you need. Every classe is responsible for what
+they manage and store/retrieve information in/from the map. This way you can destroy an instance, create another one and find
+again the same state.
 
-Works already well, but please, wait a bit before to use it.
+## Improvements and warning
+
+This library is currently not used directly and used only in one project.
+
+It's currently not a npm package.
+
+Not everything is tested, but between UIT and example, the coverage is not bad.
+
+It's an advanced v0, but still not a v1.
+
+Some features will be added over the time.
