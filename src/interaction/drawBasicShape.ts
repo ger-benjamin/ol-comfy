@@ -6,8 +6,7 @@ import OlGeometry from 'ol/geom/Geometry';
 import { never } from 'ol/events/condition';
 
 /**
- * Manage "area" drawing interaction on an OpenLayers map.
- * For Polygon and Circle.
+ * Manage "shape" drawing interaction on an OpenLayers map.
  */
 export class DrawBasicShape extends Draw {
   constructor(map: OlMap, options: Options, uid: string) {
@@ -50,7 +49,7 @@ export class DrawBasicShape extends Draw {
   }
 
   /**
-   * Get defaults configured Drawing options to draw circles.
+   * Get defaults configured Drawing options to draw lines.
    * @static
    */
   static getDefaultLineOptions(source: OlSourceVector<OlGeometry>): Options {
@@ -62,7 +61,7 @@ export class DrawBasicShape extends Draw {
   }
 
   /**
-   * Get defaults configured Drawing options to draw circles.
+   * Get defaults configured Drawing options to draw points.
    * @static
    */
   static getDefaultPointOptions(source: OlSourceVector<OlGeometry>): Options {
