@@ -9,7 +9,6 @@ import { OSM } from 'ol/source';
 import OlGeometry from 'ol/geom/Geometry';
 import RenderFeature from 'ol/render/Feature';
 import OlStyle from 'ol/style/Style';
-import { getClickPlusKeyCondition } from '../../src/event/condition';
 import { ListenKey } from '../../src/event/listen-key';
 import { updateLayerStyle } from '../../src/layer/utils';
 import { DrawBasicShape } from '../../src/interaction/drawBasicShape';
@@ -18,12 +17,19 @@ import { Translate } from '../../src/interaction/translate';
 import { Snap } from '../../src/interaction/snap';
 import { MapBrowserEvent } from 'ol';
 import { EventsKey } from 'ol/events';
-import { BackgroundLayer, EmptyStyle, OverlayLayer } from '../../src';
+import {
+  BackgroundLayer,
+  EmptyStyle,
+  getClickPlusKeyCondition,
+  OverlayLayer,
+} from '../../src';
 import OlCircle from 'ol/style/Circle';
 import OlFill from 'ol/style/Fill';
 import OlStroke from 'ol/style/Stroke';
 import { unByKeyAll } from '../../src/event/utils';
 import OlGeomPoint from 'ol/geom/Point';
+import OlGeomLine from 'ol/geom/LineString';
+import { platformModifierKeyOnly } from 'ol/events/condition';
 
 // Globally accessible values you need:
 const map = Map.createEmptyMap();
@@ -87,23 +93,29 @@ const setupDrawing = () => {
     return;
   }
   updateLayerStyle(drawLayer, createStyle);
+  // Setup listen "delete" key;
+  listenKey = new ListenKey('Delete');
   // Setup drawing.
   const pointOptions = DrawBasicShape.getDefaultPointOptions(source);
+  pointOptions.style = createStyle;
+  pointOptions.condition = () => !listenKey?.isKeyDown();
   drawPoint = new DrawBasicShape(map, pointOptions, pointInteractionId);
   const lineOptions = DrawBasicShape.getDefaultLineOptions(source);
+  lineOptions.style = createStyle;
+  lineOptions.condition = () => !listenKey?.isKeyDown();
   drawLine = new DrawBasicShape(map, lineOptions, lineInteractionId);
   // Setup modify and translate drawing. Delete with delete+click.
-  listenKey = new ListenKey('Delete');
   modify = new Modify(map, {
     deleteCondition: getClickPlusKeyCondition(
       listenKey,
-      onDeleteAction.bind(this)
+      delayOnDeleteAction.bind(this)
     ),
     source,
     style: createStyle,
   });
   translate = new Translate(map, {
     layers: [drawLayer],
+    condition: platformModifierKeyOnly,
   });
   snap = new Snap(map, {
     source,
@@ -158,6 +170,15 @@ const createStyle = (
 };
 
 /**
+ * Delay a bit the delete action to be sur that the OpenLayers is not
+ * currently modifying the feature. (Like in lines, it seems to quickly
+ * add then removes a coordinates on click, even with conditions).
+ */
+const delayOnDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
+  setTimeout(() => onDeleteAction(mapBrowserEvent), 20);
+}
+
+/**
  * Not ol-comfy but nice to have to delete feature.
  * It's given as callback to the ol-comfy delete condition.
  */
@@ -168,6 +189,15 @@ const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
       if (!overlayLayer || feature instanceof RenderFeature) {
         return;
       }
+      // Don't remove a line if there is more than two vertexes.
+      const geometry = feature.getGeometry();
+      if (
+        geometry.getType() === 'LineString' &&
+        (geometry as OlGeomLine).getCoordinates().length > 2
+      ) {
+        return;
+      }
+      // Remove feature
       const features =
         overlayLayer.getFeaturesCollection(layer1Id)?.getArray() || [];
       if (features.includes(feature)) {
