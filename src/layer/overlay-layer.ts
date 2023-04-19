@@ -15,6 +15,7 @@ import OlSourceCluster from 'ol/source/Cluster';
 import { has, isNil } from 'lodash';
 import { Subject } from 'rxjs';
 import { getObservable } from '../map/utils';
+import { getFeaturesExtent } from '../feature/utils';
 
 export const DefaultOverlayLayerGroupName = 'olcOverlayLayerGroup';
 
@@ -170,15 +171,9 @@ export class OverlayLayer extends LayerGroup {
    *   null.
    */
   getLayerFeaturesExtent(layerUid: string): OlExtent | null {
-    const extent =
-      this.getFeaturesCollection(layerUid)
-        ?.getArray()
-        .reduce(
-          (currentExtent, feature) =>
-            olExtend(currentExtent, feature.getGeometry()?.getExtent() ?? []),
-          olCreateEmptyExtent()
-        ) ?? null;
-    return extent && !olIsEmpty(extent) ? extent : null;
+    return getFeaturesExtent(
+      this.getFeaturesCollection(layerUid)?.getArray() || []
+    );
   }
 
   /**

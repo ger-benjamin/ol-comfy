@@ -5,6 +5,12 @@ import OlGeomPoint from 'ol/geom/Point';
 import OlGeomLine from 'ol/geom/LineString';
 import OlGeomPolygon from 'ol/geom/Polygon';
 import OlGeomCircle from 'ol/geom/Circle';
+import {
+  createEmpty as olCreateEmptyExtent,
+  extend as olExtend,
+  Extent as OlExtent,
+  isEmpty as olIsEmpty,
+} from 'ol/extent';
 
 /**
  * @param features the features to get the properties values from.
@@ -63,4 +69,20 @@ export const getCenterOfArea = (
     return geometry.getInteriorPoint();
   }
   return new OlGeomPoint(geometry.getCenter());
+};
+
+
+/**
+ * @returns The extent (not empty) of all given features.
+ */
+export const getFeaturesExtent = (
+  features: OlFeature<OlGeometry>[]
+): OlExtent | null => {
+  const extent =
+    features.reduce(
+      (currentExtent, feature) =>
+        olExtend(currentExtent, feature.getGeometry()?.getExtent() ?? []),
+      olCreateEmptyExtent()
+    ) ?? null;
+  return extent && !olIsEmpty(extent) ? extent : null;
 };
