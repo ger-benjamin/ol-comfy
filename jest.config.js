@@ -4,7 +4,7 @@ module.exports = {
     "js"
   ],
   setupFiles: [
-    "./setupTests.ts"
+    "./jest-setup-tests.ts"
   ],
   testEnvironment: "jsdom",
   transform: {
