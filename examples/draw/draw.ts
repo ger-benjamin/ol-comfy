@@ -176,7 +176,7 @@ const createStyle = (
  */
 const delayOnDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
   setTimeout(() => onDeleteAction(mapBrowserEvent), 20);
-}
+};
 
 /**
  * Not ol-comfy but nice to have to delete feature.

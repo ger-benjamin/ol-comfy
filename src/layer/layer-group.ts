@@ -1,11 +1,10 @@
-import OlMap from 'ol/Map';
+import OlMap, { FrameState as OlFrameState } from 'ol/Map';
 import OlCollection from 'ol/Collection';
 import OlLayerGroup from 'ol/layer/Group';
 import OlLayerBase from 'ol/layer/Base';
 import { flatten, isNil, uniq } from 'lodash';
 import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
-import { FrameState as OlFrameState } from 'ol/PluggableMap';
 import { Subject } from 'rxjs';
 import { insertAtKeepOrder } from '../collection';
 import { getObservable } from '../map/utils';
