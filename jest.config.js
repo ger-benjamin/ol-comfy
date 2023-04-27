@@ -3,6 +3,9 @@ module.exports = {
     "ts",
     "js"
   ],
+  setupFiles: [
+    "./setupTests.ts"
+  ],
   testEnvironment: "jsdom",
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",

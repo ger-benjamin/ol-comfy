@@ -71,7 +71,6 @@ export const getCenterOfArea = (
   return new OlGeomPoint(geometry.getCenter());
 };
 
-
 /**
  * @returns The extent (not empty) of all given features.
  */
