@@ -5,11 +5,11 @@ import { isNil } from 'lodash';
 export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
 
 /**
- * Manage background layers in the map.
+ * LayerGroup specialized to manage background layers (mostly tiled layers).
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 0.
  */
-export class BackgroundLayer extends LayerGroup {
+export class BackgroundLayerGroup extends LayerGroup {
   constructor(map: OlMap, options: LayerGroupOptions = {}) {
     const layerGroupUid =
       options[CommonProperties.LayerUid] || DefaultLayerBGGroupName;

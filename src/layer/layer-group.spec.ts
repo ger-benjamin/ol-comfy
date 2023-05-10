@@ -4,14 +4,14 @@ import { LayerGroup } from './layer-group';
 import { getLayerGroup } from '../test/test-data';
 import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
-import { BackgroundLayer } from './background-layer';
+import { BackgroundLayerGroup } from './background-layer-group';
 
 describe('LayersStore', () => {
   let layerGroup: LayerGroup;
   let baseLayer: OlLayerBase;
   beforeEach(() => {
     // Use one backgroundLayer to test LayerGroup (parent).
-    layerGroup = new BackgroundLayer(Map.createEmptyMap());
+    layerGroup = new BackgroundLayerGroup(Map.createEmptyMap());
     baseLayer = new OlLayerBase({});
   });
 

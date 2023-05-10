@@ -8,11 +8,11 @@ import OlCollection from 'ol/Collection';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import { OSM } from 'ol/source';
-import { BackgroundLayer, OverlayLayer } from '../../src';
+import { BackgroundLayerGroup, OverlayLayerGroup } from '../../src';
 
 // Globally accessible values you need:
 const layer1Id = 'layer1-id';
-const backgroundlLayer1Id = 'background1-id';
+const backgroundLayer1Id = 'background1-id';
 const map = Map.createEmptyMap();
 
 // Setup example.
@@ -25,7 +25,7 @@ const layer1 = new OlLayerVector({
     ]),
   }),
 });
-const backgroundlayer1 = new OlLayerTile({
+const backgroundLayer1 = new OlLayerTile({
   source: new OSM(),
 });
 const print = (msg) => {
@@ -43,24 +43,26 @@ map.setTarget('map');
 
 // Below: Use ol-comfy.
 // Your controller initializing the layers.
-const overlayLayer = new OverlayLayer(map);
-overlayLayer.addLayer(layer1, layer1Id);
-const backgroundLayer = new BackgroundLayer(map);
-backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
+const overlayLayerGroup = new OverlayLayerGroup(map);
+overlayLayerGroup.addLayer(layer1, layer1Id);
+const backgroundLayerGroup = new BackgroundLayerGroup(map);
+backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
 // A component wanting to know changes on features for a specific layer.
-overlayLayer.featuresPropertyChanged.subscribe((featurePropertyChanged) => {
-  const layer = featurePropertyChanged[CommonProperties.LayerUid];
-  const key = featurePropertyChanged.propertyKey;
-  print(`Changed "${key}" in all features of layer "${layer}"`);
-});
+overlayLayerGroup.featuresPropertyChanged.subscribe(
+  (featurePropertyChanged) => {
+    const layer = featurePropertyChanged[CommonProperties.LayerUid];
+    const key = featurePropertyChanged.propertyKey;
+    print(`Changed "${key}" in all features of layer "${layer}"`);
+  }
+);
 
 // A component wanting to add another feature.
 const featureX = new OlFeature({
   geometry: new OlGeomPoint([1000000, 1000000]),
 });
-overlayLayer.addFeatures(layer1Id, [featureX]);
+overlayLayerGroup.addFeatures(layer1Id, [featureX]);
 
 // A component wanting to set a property of all features.
-const features = overlayLayer.getFeaturesCollection(layer1Id).getArray();
-overlayLayer.setFeaturesProperty(layer1Id, features, 'protected', true);
+const features = overlayLayerGroup.getFeaturesCollection(layer1Id).getArray();
+overlayLayerGroup.setFeaturesProperty(layer1Id, features, 'protected', true);
