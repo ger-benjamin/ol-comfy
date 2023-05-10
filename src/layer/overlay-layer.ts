@@ -37,7 +37,7 @@ export interface FeaturePropertyChanged {
 }
 
 /**
- * Manage overlay layers in the map.
+ * LayerGroup specialized to manage layers with features (mostly vector layers).
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 20.
  */
@@ -79,38 +79,38 @@ export class OverlayLayer extends LayerGroup {
   }
 
   /**
-   * Get layer but typed as vector layer with vector source. No check, only
-   * typing.
+   * Get the vector layer if a vector layer with this layer id exists.
+   * @param layerUid the id of the layer to add features into.
    */
-  getVectorLayer(
-    layerUid: string
-  ): OlLayerVector<OlSourceVector<OlGeometry>> | null {
-    return super.getLayer(layerUid) as OlLayerVector<
-      OlSourceVector<OlGeometry>
-    > | null;
+  getVectorLayer(layerUid: string): OlLayerVector<OlSourceVector> | null {
+    const layer = super.getLayer(layerUid);
+    return layer instanceof OlLayerVector ? layer : null;
   }
 
   /**
-   * Get layer but typed as vector layer with cluster source. No check, only
-   * typing.
-   */
-  getClusterLayer(layerUid: string): OlLayerVector<OlSourceCluster> | null {
-    return super.getLayer(layerUid) as OlLayerVector<OlSourceCluster> | null;
-  }
-
-  /**
-   * @returns the vector source in the corresponding layer or null. For
-   *     cluster source, the returned source is the vector source inside the
-   *     cluster source.
+   * @param layerUid the id of the layer to add features into.
+   * @returns the vector source in the corresponding layer or null. For cluster
+   * source, the returned source is the first source (the effective cluster
+   * source, and not the vector source inside the cluster source).
    */
   getVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
     const layer = this.getVectorLayer(layerUid);
     if (layer === null) {
       return null;
     }
-    const source = layer.getSource();
-    // Returns the vector source from cluster source if it exists. And from
-    // the vector source directly otherwise.
+    return layer.getSource();
+  }
+
+  /**
+   * @param layerUid the id of the layer to add features into.
+   * @returns the last vector source in the corresponding layer or null.
+   * Meaning the normal source on vector layer with VectorSource, and the
+   * vector source inside the cluster source for ClusterSource.
+   */
+  getEndVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
+    const source = this.getVectorSource(layerUid);
+    // Returns the vector source from cluster source if it exists. And from the
+    // vector source directly otherwise.
     if (has(source, 'source')) {
       return (source as OlSourceCluster).getSource();
     }
@@ -124,7 +124,7 @@ export class OverlayLayer extends LayerGroup {
    * @param features the features to add to the layer.
    */
   addFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerUid);
+    const source = this.getEndVectorSource(layerUid);
     if (!source || !features.length) {
       return;
     }
@@ -140,7 +140,7 @@ export class OverlayLayer extends LayerGroup {
    * @param features the features to remove to the layer.
    */
   removeFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerUid);
+    const source = this.getEndVectorSource(layerUid);
     if (!source || !features.length) {
       return;
     }
@@ -157,7 +157,7 @@ export class OverlayLayer extends LayerGroup {
    * @param features the features to replace existing ones in the layer.
    */
   setFeatures(layerUid: string, features: OlFeature<OlGeometry>[]) {
-    const source = this.getVectorSource(layerUid);
+    const source = this.getEndVectorSource(layerUid);
     if (!source) {
       return;
     }
@@ -205,7 +205,7 @@ export class OverlayLayer extends LayerGroup {
   getFeaturesCollection(
     layerUid: string
   ): OlCollection<OlFeature<OlGeometry>> | null {
-    const source = this.getVectorSource(layerUid);
+    const source = this.getEndVectorSource(layerUid);
     return source?.getFeaturesCollection() || null;
   }
 
@@ -251,11 +251,8 @@ export class OverlayLayer extends LayerGroup {
    *     this object.
    */
   getClusterFeatures(layerUid: string): OlFeature<OlGeometry>[] | null {
-    const layer = this.getClusterLayer(layerUid);
-    if (layer === null) {
-      return null;
-    }
-    return layer.getSource().getFeatures();
+    const source = this.getVectorSource(layerUid);
+    return source ? source.getFeatures() : null;
   }
 
   /**

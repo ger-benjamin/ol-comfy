@@ -1,4 +1,5 @@
 import OlLayerVector from 'ol/layer/Vector';
+import OlTileLayer from 'ol/layer/Tile';
 import OlSourceVector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
@@ -8,9 +9,11 @@ import { CommonProperties } from './layer-group';
 import OlSourceCluster from 'ol/source/Cluster';
 import OlCollection from 'ol/Collection';
 
-describe('OverlayLayersStore', () => {
+describe('OverlayLayersoverlayLayerGroup', () => {
   let overlayLayerGroup: OverlayLayer;
   let overlayLayer: OlLayerVector<any>;
+  const tileLayerUid = 'tile-layer-id';
+
   beforeEach(() => {
     overlayLayerGroup = new OverlayLayer(Map.createEmptyMap());
     overlayLayer = new OlLayerVector({
@@ -18,20 +21,32 @@ describe('OverlayLayersStore', () => {
         useSpatialIndex: false,
       }),
     });
+    // Add a tile layer to prove that it doesn't affect tests of method
+    // dedicated to layer with vector source and features.
+    overlayLayerGroup.addLayer(new OlTileLayer(), tileLayerUid);
   });
 
-  describe('getVectorSource method', () => {
+  describe('getVectorLayer', () => {
     const layerUid = 'vector-overlay';
+
     beforeEach(() => {
       overlayLayerGroup.addLayer(overlayLayer, layerUid);
     });
 
-    it('It should getVectorSource with vector source', () => {
-      expect(overlayLayerGroup.getVectorSource(layerUid)).toBeTruthy();
+    it('should getVectorLayer on vector layer', () => {
+      expect(overlayLayerGroup.getVectorLayer(layerUid)).not.toBeNull();
     });
 
-    it('It should getVectorSource with cluster source', () => {
-      const clusterLayerId = 'cluster-overlay';
+    it('should getVectorLayer on tile layer', () => {
+      expect(overlayLayerGroup.getVectorLayer(tileLayerUid)).toBeNull();
+    });
+  });
+
+  describe('getVectorSource and getEndVectorSource methods', () => {
+    const layerUid = 'vector-overlay';
+    const clusterLayerUid = 'cluster-overlay';
+
+    beforeEach(() => {
       const clusterLayer = new OlLayerVector({
         source: new OlSourceCluster({
           source: new OlSourceVector({
@@ -39,8 +54,28 @@ describe('OverlayLayersStore', () => {
           }),
         }),
       });
-      overlayLayerGroup.addLayer(clusterLayer, clusterLayerId);
-      expect(overlayLayerGroup.getVectorSource(clusterLayerId)).toBeTruthy();
+      overlayLayerGroup.addLayer(overlayLayer, layerUid);
+      overlayLayerGroup.addLayer(clusterLayer, clusterLayerUid);
+    });
+
+    it('should getVectorSource with vector source', () => {
+      expect(overlayLayerGroup.getVectorSource(layerUid)).toBeTruthy();
+    });
+
+    it('should getEndVectorSource with vector source', () => {
+      expect(overlayLayerGroup.getEndVectorSource(layerUid)).toBeTruthy();
+    });
+
+    it('should getVectorSource with cluster source', () => {
+      const layer = overlayLayerGroup.getVectorSource(clusterLayerUid);
+      expect(layer).toBeTruthy();
+      expect(layer).toBeInstanceOf(OlSourceCluster);
+    });
+
+    it('should getEndVectorSource with cluster source', () => {
+      const layer = overlayLayerGroup.getEndVectorSource(clusterLayerUid);
+      expect(layer).toBeTruthy();
+      expect(layer).not.toBeInstanceOf(OlSourceCluster);
     });
   });
 
