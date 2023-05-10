@@ -9,7 +9,7 @@ export * from './interaction/snap';
 export * from './interaction/translate';
 export * from './layer/background-layer-group';
 export * from './layer/layer-group';
-export * from './layer/overlay-layer';
+export * from './layer/overlay-layer-group';
 export * from './layer/utils';
 export * from './map/map';
 export * from './overlay/overlay';

@@ -21,7 +21,7 @@ import {
   BackgroundLayerGroup,
   EmptyStyle,
   getClickPlusKeyCondition,
-  OverlayLayer,
+  OverlayLayerGroup,
 } from '../../src';
 import OlCircle from 'ol/style/Circle';
 import OlFill from 'ol/style/Fill';
@@ -62,8 +62,8 @@ map.setTarget('map');
 
 // Below: Use ol-comfy.
 // Your controller initializing the layers.
-let overlayLayer = new OverlayLayer(map);
-overlayLayer.addLayer(layer1, layer1Id);
+let overlayLayerGroup = new OverlayLayerGroup(map);
+overlayLayerGroup.addLayer(layer1, layer1Id);
 const backgroundLayerGroup = new BackgroundLayerGroup(map);
 backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
@@ -83,8 +83,8 @@ const eventKeys: EventsKey[] = [];
  */
 const setupDrawing = () => {
   // Setup the layer to draw in.
-  overlayLayer = new OverlayLayer(map);
-  const drawLayer = overlayLayer?.getLayer(layer1Id) as
+  overlayLayerGroup = new OverlayLayerGroup(map);
+  const drawLayer = overlayLayerGroup?.getLayer(layer1Id) as
     | OlLayerVector<OlSourceVector<OlGeometry>>
     | undefined;
   const source = drawLayer?.getSource();
@@ -186,7 +186,7 @@ const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
   mapBrowserEvent.map.forEachFeatureAtPixel(
     mapBrowserEvent.pixel,
     (feature: OlFeature<OlGeometry> | RenderFeature) => {
-      if (!overlayLayer || feature instanceof RenderFeature) {
+      if (!overlayLayerGroup || feature instanceof RenderFeature) {
         return;
       }
       // Don't remove a line if there is more than two vertexes.
@@ -199,9 +199,9 @@ const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
       }
       // Remove feature
       const features =
-        overlayLayer.getFeaturesCollection(layer1Id)?.getArray() || [];
+        overlayLayerGroup.getFeaturesCollection(layer1Id)?.getArray() || [];
       if (features.includes(feature)) {
-        overlayLayer.removeFeatures(layer1Id, [feature]);
+        overlayLayerGroup.removeFeatures(layer1Id, [feature]);
         // Make the pointer to be updated in Firefox;
         modify.getInteraction().setActive(false);
         modify.getInteraction().setActive(true);

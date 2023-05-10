@@ -43,4 +43,4 @@ backgroundLayerGroup.addLayer(backgroundLayer2, backgroundLayer2Id);
 // A component adding a control on one map.
 map2 = storeManager.getMapStore(storesId2);
 const olcMap = new Map(map2);
-olcMap.addControl('scalebare', new OlControlZoom());
+olcMap.addControl('zoom-control', new OlControlZoom());

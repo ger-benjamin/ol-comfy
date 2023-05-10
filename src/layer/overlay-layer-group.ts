@@ -41,7 +41,7 @@ export interface FeaturePropertyChanged {
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 20.
  */
-export class OverlayLayer extends LayerGroup {
+export class OverlayLayerGroup extends LayerGroup {
   private readonly featureSelectedId = 'olcOverlayLayerFeatureSelected';
   private readonly featuresPropertyChangedId =
     'olcOverlayLayerFeaturePropertyChanged';
@@ -89,9 +89,10 @@ export class OverlayLayer extends LayerGroup {
 
   /**
    * @param layerUid the id of the layer to add features into.
-   * @returns the vector source in the corresponding layer or null. For cluster
-   * source, the returned source is the first source (the effective cluster
-   * source, and not the vector source inside the cluster source).
+   * @returns the vector source in the corresponding layer or null. For
+   *     cluster source, the returned source is the first source (the
+   *     effective cluster source, and not the vector source inside the
+   *     cluster source).
    */
   getVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
     const layer = this.getVectorLayer(layerUid);
@@ -109,8 +110,8 @@ export class OverlayLayer extends LayerGroup {
    */
   getEndVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
     const source = this.getVectorSource(layerUid);
-    // Returns the vector source from cluster source if it exists. And from the
-    // vector source directly otherwise.
+    // Returns the vector source from cluster source if it exists. And from
+    // the vector source directly otherwise.
     if (has(source, 'source')) {
       return (source as OlSourceCluster).getSource();
     }

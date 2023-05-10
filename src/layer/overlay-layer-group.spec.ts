@@ -3,19 +3,19 @@ import OlTileLayer from 'ol/layer/Tile';
 import OlSourceVector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
-import { OverlayLayer } from './overlay-layer';
+import { OverlayLayerGroup } from './overlay-layer-group';
 import { Map } from '../map/map';
 import { CommonProperties } from './layer-group';
 import OlSourceCluster from 'ol/source/Cluster';
 import OlCollection from 'ol/Collection';
 
-describe('OverlayLayersoverlayLayerGroup', () => {
-  let overlayLayerGroup: OverlayLayer;
+describe('OverlayLayerGroup', () => {
+  let overlayLayerGroup: OverlayLayerGroup;
   let overlayLayer: OlLayerVector<any>;
   const tileLayerUid = 'tile-layer-id';
 
   beforeEach(() => {
-    overlayLayerGroup = new OverlayLayer(Map.createEmptyMap());
+    overlayLayerGroup = new OverlayLayerGroup(Map.createEmptyMap());
     overlayLayer = new OlLayerVector({
       source: new OlSourceVector({
         useSpatialIndex: false,
