@@ -9,7 +9,7 @@ export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
  * Each instance must have a unique name (one cas use the default name).
  * Default position is 0.
  */
-export class BackgroundLayer extends LayerGroup {
+export class BackgroundLayerGroup extends LayerGroup {
   constructor(map: OlMap, options: LayerGroupOptions = {}) {
     const layerGroupUid =
       options[CommonProperties.LayerUid] || DefaultLayerBGGroupName;

@@ -18,7 +18,7 @@ import { Snap } from '../../src/interaction/snap';
 import { MapBrowserEvent } from 'ol';
 import { EventsKey } from 'ol/events';
 import {
-  BackgroundLayer,
+  BackgroundLayerGroup,
   EmptyStyle,
   getClickPlusKeyCondition,
   OverlayLayer,
@@ -34,7 +34,7 @@ import { platformModifierKeyOnly } from 'ol/events/condition';
 // Globally accessible values you need:
 const map = Map.createEmptyMap();
 const layer1Id = 'layer1-id';
-const backgroundlLayer1Id = 'background1-id';
+const backgroundLayer1Id = 'background1-id';
 const pointInteractionId = 'point-interaction-uid';
 const lineInteractionId = 'line-interaction-uid';
 
@@ -44,7 +44,7 @@ const layer1 = new OlLayerVector({
     features: new OlCollection([new OlFeature()]),
   }),
 });
-const backgroundlayer1 = new OlLayerTile({
+const backgroundLayer1 = new OlLayerTile({
   source: new OSM(),
 });
 const print = (msg) => {
@@ -64,8 +64,8 @@ map.setTarget('map');
 // Your controller initializing the layers.
 let overlayLayer = new OverlayLayer(map);
 overlayLayer.addLayer(layer1, layer1Id);
-const backgroundLayer = new BackgroundLayer(map);
-backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
+const backgroundLayerGroup = new BackgroundLayerGroup(map);
+backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
 // A component wanting to enable draw.
 let drawPoint: DrawBasicShape | undefined;

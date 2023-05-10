@@ -8,11 +8,11 @@ import OlCollection from 'ol/Collection';
 import OlFeature from 'ol/Feature';
 import OlGeomPoint from 'ol/geom/Point';
 import { OSM } from 'ol/source';
-import { BackgroundLayer, OverlayLayer } from '../../src';
+import { BackgroundLayerGroup, OverlayLayer } from '../../src';
 
 // Globally accessible values you need:
 const layer1Id = 'layer1-id';
-const backgroundlLayer1Id = 'background1-id';
+const backgroundLayer1Id = 'background1-id';
 const map = Map.createEmptyMap();
 
 // Setup example.
@@ -25,7 +25,7 @@ const layer1 = new OlLayerVector({
     ]),
   }),
 });
-const backgroundlayer1 = new OlLayerTile({
+const backgroundLayer1 = new OlLayerTile({
   source: new OSM(),
 });
 const print = (msg) => {
@@ -45,8 +45,8 @@ map.setTarget('map');
 // Your controller initializing the layers.
 const overlayLayer = new OverlayLayer(map);
 overlayLayer.addLayer(layer1, layer1Id);
-const backgroundLayer = new BackgroundLayer(map);
-backgroundLayer.addLayer(backgroundlayer1, backgroundlLayer1Id);
+const backgroundLayerGroup = new BackgroundLayerGroup(map);
+backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
 // A component wanting to know changes on features for a specific layer.
 overlayLayer.featuresPropertyChanged.subscribe((featurePropertyChanged) => {

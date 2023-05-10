@@ -1,15 +1,15 @@
 import OlLayerBase from 'ol/layer/Base';
-import { BackgroundLayer } from './background-layer';
+import { BackgroundLayerGroup } from './background-layer-group';
 import { Map } from '../map/map';
 import { getLayerGroup } from '../test/test-data';
 import { CommonProperties } from './layer-group';
 import OlLayerGroup from 'ol/layer/Group';
 
-describe('BackgroundLayersStore', () => {
-  let bgGroup: BackgroundLayer;
+describe('BackgroundLayerGroup', () => {
+  let bgGroup: BackgroundLayerGroup;
   let baseLayer: OlLayerBase;
   beforeEach(() => {
-    bgGroup = new BackgroundLayer(Map.createEmptyMap());
+    bgGroup = new BackgroundLayerGroup(Map.createEmptyMap());
     baseLayer = new OlLayerBase({});
   });
 
