@@ -19,7 +19,7 @@ export class BackgroundLayerGroup extends LayerGroup {
   }
 
   /**
-   * Set one background layer as visible, all others as not visible
+   * Set one background layer as visible, all others as not visible.
    */
   toggleVisible(layerUid: string) {
     const layers = this.layerGroup.getLayers().getArray();
@@ -27,7 +27,11 @@ export class BackgroundLayerGroup extends LayerGroup {
       (layer) => layer.get(CommonProperties.LayerUid) === layerUid
     );
     layers.forEach((layer) => {
-      layer.setVisible(layer === foundLayer);
+      this.setLayerProperty(
+        layer.get(CommonProperties.LayerUid),
+        CommonProperties.visible,
+        layer === foundLayer
+      );
     });
   }
 }

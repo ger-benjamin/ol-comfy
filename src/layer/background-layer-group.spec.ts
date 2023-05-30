@@ -3,7 +3,6 @@ import { BackgroundLayerGroup } from './background-layer-group';
 import { Map } from '../map/map';
 import { getLayerGroup } from '../test/test-data';
 import { CommonProperties } from './layer-group';
-import OlLayerGroup from 'ol/layer/Group';
 
 describe('BackgroundLayerGroup', () => {
   let bgGroup: BackgroundLayerGroup;
@@ -25,23 +24,15 @@ describe('BackgroundLayerGroup', () => {
     bgGroup.toggleVisible('firstLayer');
     expect(expectedGroup[0].getVisible()).toBeTruthy();
     expect(expectedGroup[1].getVisible()).toBeFalsy();
-    // Wait the events to execute this final async test
-    let eventsCounter = 0;
-    bgGroup.getLayerGroup().on('change', (event) => {
-      // Two layers = two events.
-      eventsCounter++;
-      if (eventsCounter === 2) {
-        const layerGroup = event.target as OlLayerGroup;
-        const visibleLayer = layerGroup
-          .getLayers()
-          .getArray()
-          .find((layer) => layer.getVisible());
-        expect(visibleLayer?.get(CommonProperties.LayerUid)).toEqual(
-          'secondLayer'
-        );
-        done();
-      }
+    // Prepare to execute this final async test.
+    bgGroup.layerPropertyChanged.subscribe((layerPropertyChanged) => {
+      expect(layerPropertyChanged.layer.get(CommonProperties.LayerUid)).toEqual(
+        'secondLayer'
+      );
+      expect(layerPropertyChanged.layer.getVisible()).toBeTruthy();
+      done();
     });
+    // Run the async test.
     bgGroup.toggleVisible('secondLayer');
   });
 });

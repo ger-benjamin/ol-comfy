@@ -32,11 +32,24 @@ export interface LayerGroupOptions {
 }
 
 /**
+ * LayerPropertyChanged event object.
+ */
+export interface LayerPropertyChanged {
+  /** The updated layer. */
+  layer: OlLayerBase;
+  /** The previous value that has now changed. */
+  previousValue: unknown;
+  /** The property name of the changed value. */
+  propertyName: string;
+}
+
+/**
  * Parent (abstract) class for layer group, helps to manipulate one layer group.
  * The child class must start by setting the layerGroup.
  */
 export class LayerGroup {
   private readonly layerAddedId = 'olcLayerAdded';
+  private readonly layerPropertyChangedId = 'olcLayerPropertyChanged';
   protected readonly map: OlMap;
   protected layerGroup: OlLayerGroup;
 
@@ -53,6 +66,17 @@ export class LayerGroup {
       this.map,
       this.getObservableName(this.layerAddedId)
     ) as Subject<OlLayerBase>;
+  }
+
+  /**
+   * @returns an observables that notify layer property modification in this
+   * group.
+   */
+  get layerPropertyChanged(): Subject<LayerPropertyChanged> {
+    return getObservable(
+      this.map,
+      this.getObservableName(this.layerPropertyChangedId)
+    ) as Subject<LayerPropertyChanged>;
   }
 
   /**
@@ -135,6 +159,24 @@ export class LayerGroup {
       .filter((layer) => layer.get('source'))
       .map((layer) => layer.get('source'))
       .filter((source) => !isNil(source));
+  }
+
+  /**
+   * Set a layer property in this layer group and emits a
+   * 'layerPropertyChanged' observable event.
+   */
+  setLayerProperty(layerUid: string, key: string, value: unknown) {
+    const layer = this.getLayer(layerUid);
+    if (!layer) {
+      return;
+    }
+    const previousValue = layer.get(key);
+    layer.set(key, value);
+    this.layerPropertyChanged.next({
+      layer,
+      previousValue,
+      propertyName: key,
+    });
   }
 
   /**
@@ -225,14 +267,24 @@ export class LayerGroup {
    * @private
    */
   private addObservables(layerGroupUid: string) {
-    const observableName = this.getObservableNameFromLayerUid(
+    const layerAddedObservableName = this.getObservableNameFromLayerUid(
       this.layerAddedId,
       layerGroupUid
     );
-    if (getObservable(this.map, observableName)) {
-      return;
+    const layerPropertyChangedObservableName =
+      this.getObservableNameFromLayerUid(
+        this.layerPropertyChangedId,
+        layerGroupUid
+      );
+    if (!getObservable(this.map, layerAddedObservableName)) {
+      this.map.set(layerAddedObservableName, new Subject<OlLayerBase>());
     }
-    this.map.set(observableName, new Subject<OlLayerBase>());
+    if (!getObservable(this.map, layerPropertyChangedObservableName)) {
+      this.map.set(
+        layerPropertyChangedObservableName,
+        new Subject<LayerPropertyChanged>()
+      );
+    }
   }
 
   /**

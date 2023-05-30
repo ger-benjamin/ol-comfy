@@ -1,6 +1,6 @@
 import OlLayerBase from 'ol/layer/Base';
 import { Map } from '../map/map';
-import { LayerGroup } from './layer-group';
+import { CommonProperties, LayerGroup } from './layer-group';
 import { getLayerGroup } from '../test/test-data';
 import OlLayerLayer from 'ol/layer/Layer';
 import OlSourceSource from 'ol/source/Source';
@@ -70,5 +70,22 @@ describe('LayersStore', () => {
     layers[2].setVisible(false);
     layers.forEach((layer, index) => layerGroup.addLayer(layer, `${index}`));
     expect(layerGroup.getAttributions()).toEqual(['attr1', 'attr2']);
+  });
+
+  it('should setLayerProperty', (done) => {
+    const layerId = 'afLayer';
+    const propertyName = 'test';
+    layerGroup.layerPropertyChanged.subscribe((layerPropertyChanged) => {
+      expect(layerPropertyChanged.layer.get(CommonProperties.LayerUid)).toEqual(
+        layerId
+      );
+      expect(layerPropertyChanged.propertyName).toEqual(propertyName);
+      expect(layerPropertyChanged.previousValue).toEqual(false);
+      expect(layerPropertyChanged.layer.get(propertyName)).toBeTruthy();
+      done();
+    });
+    layerGroup.addLayer(baseLayer, layerId);
+    baseLayer.set(propertyName, false);
+    layerGroup.setLayerProperty(layerId, propertyName, true);
   });
 });
