@@ -1,28 +1,34 @@
 import { MapBrowserEvent } from 'ol';
-import { ListenKey } from './listen-key';
-import { click } from 'ol/events/condition';
 
 type conditionFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => boolean;
 type callBackFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => void;
 
 /**
- * @returns a condition function that check if the event is a click event
- * and if the listened key is currently pressed.
- * @param listenKey The instance used to know if the key is currently pressed.
- * @param callback An optional callback to execute if the condition is
- * fulfilled.
+ * Handy function that can be used as condition without using the condition signature.
+ * @param testFn The function to execute as a condition (without params).
+ * @returns an Ol condition function.
  */
-export const getClickPlusKeyCondition = (
-  listenKey: ListenKey,
-  callback?: callBackFn
+export const condition = (testFn: () => boolean): conditionFn => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return (_mapBrowserEvent: MapBrowserEvent<UIEvent>): boolean => {
+    return testFn();
+  };
+};
+
+/**
+ * @param condition The condition to test.
+ * @param callback A callback to execute if the condition is fulfilled.
+ * @returns a condition function that check the given condition. If the condition is truthy, execute the callback.
+ */
+export const conditionThen = (
+  condition: conditionFn,
+  callback: callBackFn
 ): conditionFn => {
-  return (mapBrowserEvent: MapBrowserEvent<UIEvent>): boolean => {
-    if (!click(mapBrowserEvent) || !listenKey.isKeyDown()) {
-      return false;
-    }
-    if (callback) {
+  return (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
+    if (condition(mapBrowserEvent)) {
       callback(mapBrowserEvent);
+      return true;
     }
-    return true;
+    return false;
   };
 };
