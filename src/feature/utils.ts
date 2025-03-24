@@ -1,16 +1,16 @@
 import { uniq } from 'lodash';
-import OlFeature from 'ol/Feature';
-import { Geometry as OlGeometry } from 'ol/geom';
-import OlGeomPoint from 'ol/geom/Point';
-import OlGeomLine from 'ol/geom/LineString';
-import OlGeomPolygon from 'ol/geom/Polygon';
-import OlGeomCircle from 'ol/geom/Circle';
+import OlFeature from 'ol/Feature.js';
+import { Geometry as OlGeometry } from 'ol/geom.js';
+import OlGeomPoint from 'ol/geom/Point.js';
+import OlGeomLine from 'ol/geom/LineString.js';
+import OlGeomPolygon from 'ol/geom/Polygon.js';
+import OlGeomCircle from 'ol/geom/Circle.js';
 import {
   createEmpty as olCreateEmptyExtent,
   extend as olExtend,
-  Extent as OlExtent,
   isEmpty as olIsEmpty,
-} from 'ol/extent';
+  type Extent as OlExtent,
+} from 'ol/extent.js';
 
 /**
  * @param features the features to get the properties values from.
@@ -19,12 +19,12 @@ import {
  */
 export const getDistinctFeaturesProperties = (
   features: OlFeature<OlGeometry>[],
-  propertyKey: string
+  propertyKey: string,
 ): unknown[] => {
   return uniq(
     features.map((feature) => {
       return feature.get(propertyKey);
-    })
+    }),
   );
 };
 
@@ -40,19 +40,21 @@ export const getLinesBetweenPoints = (
   opt_onLineCreated?: (
     line: OlFeature<OlGeomLine>,
     startPoint: OlFeature<OlGeomPoint>,
-    endPoint: OlFeature<OlGeomPoint>
-  ) => void
+    endPoint: OlFeature<OlGeomPoint>,
+  ) => void,
 ): OlFeature<OlGeomLine>[] => {
   const pointsShifted = Array.from(points.slice(1));
   return pointsShifted.map((_point, index) => {
+    const startPoint = points[index]!;
+    const endPoint = pointsShifted[index]!;
     const line = new OlFeature<OlGeomLine>({
       geometry: new OlGeomLine([
-        points[index].getGeometry()?.getCoordinates() || [],
-        pointsShifted[index].getGeometry()?.getCoordinates() || [],
+        startPoint.getGeometry()?.getCoordinates() || [],
+        endPoint.getGeometry()?.getCoordinates() || [],
       ]),
     });
     if (opt_onLineCreated) {
-      opt_onLineCreated(line, points[index], pointsShifted[index]);
+      opt_onLineCreated(line, startPoint, endPoint);
     }
     return line;
   });
@@ -62,9 +64,7 @@ export const getLinesBetweenPoints = (
  * @returns OlGeomPoint at the center of the given "area" geometry (circle
  * or polygon).
  */
-export const getCenterOfArea = (
-  geometry: OlGeomPolygon | OlGeomCircle
-): OlGeomPoint => {
+export const getCenterOfArea = (geometry: OlGeomPolygon | OlGeomCircle): OlGeomPoint => {
   if (geometry instanceof OlGeomPolygon) {
     return geometry.getInteriorPoint();
   }
@@ -74,14 +74,12 @@ export const getCenterOfArea = (
 /**
  * @returns The extent (not empty) of all given features.
  */
-export const getFeaturesExtent = (
-  features: OlFeature<OlGeometry>[]
-): OlExtent | null => {
+export const getFeaturesExtent = (features: OlFeature<OlGeometry>[]): OlExtent | null => {
   const extent =
     features.reduce(
       (currentExtent, feature) =>
         olExtend(currentExtent, feature.getGeometry()?.getExtent() ?? []),
-      olCreateEmptyExtent()
+      olCreateEmptyExtent(),
     ) ?? null;
   return extent && !olIsEmpty(extent) ? extent : null;
 };

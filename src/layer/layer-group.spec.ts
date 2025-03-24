@@ -1,10 +1,11 @@
-import OlLayerBase from 'ol/layer/Base';
-import { Map } from '../map/map';
-import { LayerGroup } from './layer-group';
-import { getLayerGroup } from '../test/test-data';
-import OlLayerLayer from 'ol/layer/Layer';
-import OlSourceSource from 'ol/source/Source';
-import { BackgroundLayerGroup } from './background-layer-group';
+import { describe, beforeEach, it, expect } from 'vitest';
+import OlLayerBase from 'ol/layer/Base.js';
+import OlLayerLayer from 'ol/layer/Layer.js';
+import OlSourceSource from 'ol/source/Source.js';
+import { Map } from '../map/map.js';
+import { LayerGroup } from './layer-group.js';
+import { getLayerGroup } from '../test/test-data.js';
+import { BackgroundLayerGroup } from './background-layer-group.js';
 
 describe('LayersStore', () => {
   let layerGroup: LayerGroup;
@@ -15,14 +16,15 @@ describe('LayersStore', () => {
     baseLayer = new OlLayerBase({});
   });
 
-  it('should addLayer', (done) => {
-    layerGroup.layerAdded.subscribe((layer) => {
-      expect(layer).toEqual(baseLayer);
-      done();
-    });
-    layerGroup.addLayer(baseLayer, 'myLayer');
-    expect(getLayerGroup(layerGroup, 0).getLayers().getLength()).toEqual(1);
-  });
+  it('should addLayer', () =>
+    new Promise((done) => {
+      layerGroup.layerAdded.subscribe((layer) => {
+        expect(layer).toEqual(baseLayer);
+        done('Done');
+      });
+      layerGroup.addLayer(baseLayer, 'myLayer');
+      expect(getLayerGroup(layerGroup, 0).getLayers().getLength()).toEqual(1);
+    }));
 
   it('should clearAll', () => {
     layerGroup.addLayer(baseLayer, 'myLayer');
@@ -41,7 +43,7 @@ describe('LayersStore', () => {
     // Invalid empty name => fail
     layerGroup.addLayer(baseLayer, '');
     expect(group.length).toEqual(1);
-    // @ts-ignore: Could happen on runtime
+    // @ts-expect-error Could happen on runtime
     layerGroup.addLayer(null, 'anotherLayer');
     expect(group.length).toEqual(1);
   });
@@ -67,7 +69,7 @@ describe('LayersStore', () => {
       createLayer('attr3'),
       createLayer('attr1'),
     ];
-    layers[2].setVisible(false);
+    layers[2]!.setVisible(false);
     layers.forEach((layer, index) => layerGroup.addLayer(layer, `${index}`));
     expect(layerGroup.getAttributions()).toEqual(['attr1', 'attr2']);
   });

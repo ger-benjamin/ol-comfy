@@ -1,5 +1,5 @@
-import { Map } from '../../src/map/map';
-import OlMap from 'ol/Map';
+import OlMap from 'ol/Map.js';
+import { Map } from '../../src/map/map.js';
 
 interface Store {
   map?: OlMap;
@@ -14,7 +14,7 @@ export class StoreManager {
 
   getMapStore(storesId: string): OlMap {
     this.maybeCreateStores(storesId);
-    return this.stores[storesId].map as OlMap;
+    return this.stores[storesId]!.map as OlMap;
   }
 
   destroyStores(storesId: string) {

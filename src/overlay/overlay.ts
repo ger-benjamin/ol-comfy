@@ -1,5 +1,5 @@
-import OlMap from 'ol/Map';
-import OlOverlay from 'ol/Overlay';
+import OlMap from 'ol/Map.js';
+import OlOverlay from 'ol/Overlay.js';
 
 export const OverlayGroupUid = 'olcOverlayGroupUid';
 
@@ -34,9 +34,7 @@ export class Overlay {
     this.map
       .getOverlays()
       .getArray()
-      .filter(
-        (overlay: OlOverlay) => overlay.get(OverlayGroupUid) === overlayGroupUid
-      )
+      .filter((overlay: OlOverlay) => overlay.get(OverlayGroupUid) === overlayGroupUid)
       .forEach((overlay: OlOverlay) => this.map.removeOverlay(overlay));
   }
 

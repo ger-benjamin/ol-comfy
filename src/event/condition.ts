@@ -25,7 +25,7 @@ export const condition = (testFn: () => boolean): conditionFn => {
  */
 export const conditionThen = (
   condition: conditionFn,
-  callback: callBackFn
+  callback: callBackFn,
 ): conditionFn => {
   return (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
     if (condition(mapBrowserEvent)) {

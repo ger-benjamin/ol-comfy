@@ -1,5 +1,5 @@
-import OlInteractionSnap, { Options as SnapOptions } from 'ol/interaction/Snap';
-import OlMap from 'ol/Map';
+import OlInteractionSnap, { type Options as SnapOptions } from 'ol/interaction/Snap.js';
+import OlMap from 'ol/Map.js';
 
 /**
  * Base class to manage OL Snap interactions.
@@ -10,7 +10,10 @@ export class Snap {
   /**
    * Add a new Modify Interaction in the map.
    */
-  constructor(private map: OlMap, options: SnapOptions) {
+  constructor(
+    private map: OlMap,
+    options: SnapOptions,
+  ) {
     this.snapInteraction = new OlInteractionSnap(options);
     this.map.addInteraction(this.snapInteraction);
   }

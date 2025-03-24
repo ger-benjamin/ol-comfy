@@ -1,11 +1,11 @@
-import OlMap from 'ol/Map';
-import OlView from 'ol/View';
-import { Extent as OlExtent } from 'ol/extent';
 import { isNil } from 'lodash';
-import { getPointResolution } from 'ol/proj';
-import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
-import { EventsKey } from 'ol/events';
-import { unByKeyAll } from '../event/utils';
+import OlMap from 'ol/Map.js';
+import OlView from 'ol/View.js';
+import { type Extent as OlExtent } from 'ol/extent.js';
+import { getPointResolution } from 'ol/proj.js';
+import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside.js';
+import { type EventsKey } from 'ol/events.js';
+import { unByKeyAll } from '../event/utils.js';
 
 /**
  * Helpers for the view in the map.
@@ -22,7 +22,7 @@ export class View {
     this.view = this.map.getView();
     if (listen) {
       this.eventsKeys.push(
-        this.map.on('change:view', () => (this.view = this.map.getView()))
+        this.map.on('change:view', () => (this.view = this.map.getView())),
       );
     }
   }
@@ -49,11 +49,7 @@ export class View {
     if (isNil(resolution)) {
       return undefined;
     }
-    return getPointResolution(
-      this.view.getProjection(),
-      resolution,
-      coordinates
-    );
+    return getPointResolution(this.view.getProjection(), resolution, coordinates);
   }
 
   /**

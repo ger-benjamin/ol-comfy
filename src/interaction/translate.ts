@@ -1,7 +1,7 @@
 import OlInteractionTranslate, {
-  Options as TranslateOptions,
-} from 'ol/interaction/Translate';
-import OlMap from 'ol/Map';
+  type Options as TranslateOptions,
+} from 'ol/interaction/Translate.js';
+import OlMap from 'ol/Map.js';
 
 /**
  * Base class to manage OL Translate interactions.
@@ -12,7 +12,10 @@ export class Translate {
   /**
    * Add a new Translate Interaction in the map.
    */
-  constructor(private map: OlMap, options: TranslateOptions) {
+  constructor(
+    private map: OlMap,
+    options: TranslateOptions,
+  ) {
     this.translateInteraction = new OlInteractionTranslate(options);
     this.map.addInteraction(this.translateInteraction);
   }

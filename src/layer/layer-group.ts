@@ -1,13 +1,14 @@
-import OlMap, { FrameState as OlFrameState } from 'ol/Map';
-import OlCollection from 'ol/Collection';
-import OlLayerGroup from 'ol/layer/Group';
-import OlLayerBase from 'ol/layer/Base';
 import { flatten, isNil, uniq } from 'lodash';
-import OlLayerLayer from 'ol/layer/Layer';
-import OlSourceSource from 'ol/source/Source';
 import { Subject } from 'rxjs';
-import { insertAtKeepOrder } from '../collection';
-import { getObservable } from '../map/utils';
+import OlMap from 'ol/Map.js';
+import OlCollection from 'ol/Collection.js';
+import OlLayerGroup from 'ol/layer/Group.js';
+import OlLayerBase from 'ol/layer/Base.js';
+import OlLayerLayer from 'ol/layer/Layer.js';
+import OlSourceSource from 'ol/source/Source.js';
+import type { ViewStateLayerStateExtent } from 'ol/View.js';
+import { insertAtKeepOrder } from '../collection.js';
+import { getObservable } from '../map/utils.js';
 
 /**
  * Layers common properties
@@ -38,6 +39,7 @@ export interface LayerGroupOptions {
 export class LayerGroup {
   private readonly layerAddedId = 'olcLayerAdded';
   protected readonly map: OlMap;
+  // @ts-expect-error this will be handled by the cild classes
   protected layerGroup: OlLayerGroup;
 
   constructor(map: OlMap, layerGroupUid: string) {
@@ -51,7 +53,7 @@ export class LayerGroup {
   get layerAdded(): Subject<OlLayerBase> {
     return getObservable(
       this.map,
-      this.getObservableName(this.layerAddedId)
+      this.getObservableName(this.layerAddedId),
     ) as Subject<OlLayerBase>;
   }
 
@@ -96,8 +98,7 @@ export class LayerGroup {
       this.layerGroup
         .getLayers()
         .getArray()
-        .find((layer) => layer.get(CommonProperties.LayerUid) === layerUid) ||
-      null
+        .find((layer) => layer.get(CommonProperties.LayerUid) === layerUid) || null
     );
   }
 
@@ -112,9 +113,9 @@ export class LayerGroup {
           .getArray()
           .filter((layer) => layer.getVisible())
           .map((layer) =>
-            this.getAttributionFromLayer(layer as OlLayerLayer<OlSourceSource>)
-          )
-      )
+            this.getAttributionFromLayer(layer as OlLayerLayer<OlSourceSource>),
+          ),
+      ),
     );
   }
 
@@ -179,7 +180,7 @@ export class LayerGroup {
       this.map.getLayers(),
       this.layerGroup,
       `olcPosition-${layerGroupUid}`,
-      position
+      position,
     );
   }
 
@@ -194,7 +195,7 @@ export class LayerGroup {
         .find(
           (layerGroup) =>
             layerGroup.get(CommonProperties.LayerUid) === layerUid &&
-            layerGroup instanceof OlLayerGroup
+            layerGroup instanceof OlLayerGroup,
         ) as OlLayerGroup) || null
     );
   }
@@ -212,10 +213,7 @@ export class LayerGroup {
    * @returns A unique observable name.
    * @private
    */
-  private getObservableNameFromLayerUid(
-    observableName: string,
-    layerGroupUid: string
-  ) {
+  private getObservableNameFromLayerUid(observableName: string, layerGroupUid: string) {
     return `${observableName}-${layerGroupUid}`;
   }
 
@@ -227,7 +225,7 @@ export class LayerGroup {
   private addObservables(layerGroupUid: string) {
     const observableName = this.getObservableNameFromLayerUid(
       this.layerAddedId,
-      layerGroupUid
+      layerGroupUid,
     );
     if (getObservable(this.map, observableName)) {
       return;
@@ -240,14 +238,12 @@ export class LayerGroup {
    * @returns An array of attributions.
    * @private
    */
-  private getAttributionFromLayer(
-    layer: OlLayerLayer<OlSourceSource>
-  ): string[] {
+  private getAttributionFromLayer(layer: OlLayerLayer<OlSourceSource>): string[] {
     const attributionsFn = layer.getSource()?.getAttributions();
     // Small hack to get the attribution without needed an Ol/control see
     // https://github.com/openlayers/openlayers/blob/29dcdeee5570fcfd8151768fcc9a493d8fda5164/src/ol/source/Source.js#L224-L241
     const attributions = attributionsFn
-      ? attributionsFn({} as unknown as OlFrameState)
+      ? attributionsFn({} as unknown as ViewStateLayerStateExtent)
       : [];
     return Array.isArray(attributions) ? attributions : [attributions];
   }

@@ -1,5 +1,5 @@
-import OlMap from 'ol/Map';
-import OlInteractionDraw from 'ol/interaction/Draw';
+import OlMap from 'ol/Map.js';
+import OlInteractionDraw from 'ol/interaction/Draw.js';
 
 /** Uid property key for the draw interaction. */
 export const DrawInteractionUidKey = 'olcInteractionDrawUid';
@@ -16,9 +16,13 @@ export const DrawInteractionGroupValue = 'olcStandardDraw';
  * destroy - and let possible find back interactions to add listener on them.
  */
 export class Draw {
+  // @ts-expect-error This is handled by children classes.
   protected interaction: OlInteractionDraw;
 
-  constructor(protected map: OlMap, uid: string) {
+  constructor(
+    protected map: OlMap,
+    uid: string,
+  ) {
     const interaction = this.getDrawInteraction(uid);
     if (interaction) {
       this.interaction = interaction;
@@ -83,9 +87,7 @@ export class Draw {
    * @protected
    */
   protected deactivateAll() {
-    this.getDrawInteractions().forEach((interaction) =>
-      interaction.setActive(false)
-    );
+    this.getDrawInteractions().forEach((interaction) => interaction.setActive(false));
   }
 
   /**
@@ -97,8 +99,7 @@ export class Draw {
       .getInteractions()
       .getArray()
       .find(
-        (interaction) =>
-          interaction.get(DrawInteractionUidKey) === this.getFullUid(uid)
+        (interaction) => interaction.get(DrawInteractionUidKey) === this.getFullUid(uid),
       ) as OlInteractionDraw | undefined;
   }
 
@@ -112,7 +113,7 @@ export class Draw {
       .getInteractions()
       .getArray()
       .filter(
-        (interaction) => !!interaction.get(DrawInteractionGroupKey)
+        (interaction) => !!interaction.get(DrawInteractionGroupKey),
       ) as OlInteractionDraw[];
   }
 }

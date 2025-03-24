@@ -1,6 +1,6 @@
-import { EventsKey, listen } from 'ol/events';
-import { unByKeyAll } from './utils';
-import BaseEvent from 'ol/events/Event';
+import { type EventsKey, listen } from 'ol/events.js';
+import BaseEvent from 'ol/events/Event.js';
+import { unByKeyAll } from './utils.js';
 
 type callback = () => void;
 
@@ -17,9 +17,7 @@ export class ListenKey {
    * @param listenedKey the key to listen.
    */
   constructor(private readonly listenedKey: string) {
-    this.eventKeys.push(
-      listen(document, 'keydown', this.handleKeyDown.bind(this))
-    );
+    this.eventKeys.push(listen(document, 'keydown', this.handleKeyDown.bind(this)));
     this.eventKeys.push(listen(document, 'keyup', this.handleKeyUp.bind(this)));
   }
 

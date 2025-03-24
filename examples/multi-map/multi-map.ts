@@ -1,9 +1,10 @@
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import { OSM } from 'ol/source';
-import storeManager from './store-manager';
-import OlControlZoom from 'ol/control/Zoom';
-import { BackgroundLayerGroup, Map } from '../../src';
+import OlView from 'ol/View.js';
+import OlLayerTile from 'ol/layer/Tile.js';
+import { OSM } from 'ol/source.js';
+import storeManager from './store-manager.js';
+import OlControlZoom from 'ol/control/Zoom.js';
+import { BackgroundLayerGroup } from '../../src/layer/background-layer-group.js';
+import { Map } from '../../src/map/map.js';
 
 // Globally accessible values you need:
 const storesId1 = 'store-1';

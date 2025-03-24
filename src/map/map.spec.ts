@@ -1,5 +1,6 @@
-import { Map } from './map';
-import { ScaleLine } from 'ol/control';
+import { describe, beforeEach, it, expect } from 'vitest';
+import { Map } from './map.js';
+import { ScaleLine } from 'ol/control.js';
 
 describe('MapStore', () => {
   let olcMap: Map;

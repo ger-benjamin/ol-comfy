@@ -1,14 +1,15 @@
-import { Map } from '../../src/map/map';
-import { CommonProperties } from '../../src/layer/layer-group';
-import OlView from 'ol/View';
-import OlLayerTile from 'ol/layer/Tile';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
-import OlCollection from 'ol/Collection';
-import OlFeature from 'ol/Feature';
-import OlGeomPoint from 'ol/geom/Point';
-import { OSM } from 'ol/source';
-import { BackgroundLayerGroup, OverlayLayerGroup } from '../../src';
+import OlView from 'ol/View.js';
+import OlLayerTile from 'ol/layer/Tile.js';
+import OlLayerVector from 'ol/layer/Vector.js';
+import OlSourceVector from 'ol/source/Vector.js';
+import OlCollection from 'ol/Collection.js';
+import OlFeature from 'ol/Feature.js';
+import OlGeomPoint from 'ol/geom/Point.js';
+import { OSM } from 'ol/source.js';
+import { Map } from '../../src/map/map.js';
+import { CommonProperties } from '../../src/layer/layer-group.js';
+import { BackgroundLayerGroup } from '../../src/layer/background-layer-group.js';
+import { OverlayLayerGroup } from '../../src/layer/overlay-layer-group.js';
 
 // Globally accessible values you need:
 const layer1Id = 'layer1-id';
@@ -28,8 +29,8 @@ const layer1 = new OlLayerVector({
 const backgroundLayer1 = new OlLayerTile({
   source: new OSM(),
 });
-const print = (msg) => {
-  document.querySelector('#console .text').textContent = msg;
+const print = (msg: string) => {
+  document.querySelector('#console .text')!.textContent = msg;
 };
 
 // Your controller initializing the map.
@@ -37,7 +38,7 @@ map.setView(
   new OlView({
     center: [0, 0],
     zoom: 2,
-  })
+  }),
 );
 map.setTarget('map');
 
@@ -49,13 +50,11 @@ const backgroundLayerGroup = new BackgroundLayerGroup(map);
 backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
 // A component wanting to know changes on features for a specific layer.
-overlayLayerGroup.featuresPropertyChanged.subscribe(
-  (featurePropertyChanged) => {
-    const layer = featurePropertyChanged[CommonProperties.LayerUid];
-    const key = featurePropertyChanged.propertyKey;
-    print(`Changed "${key}" in all features of layer "${layer}"`);
-  }
-);
+overlayLayerGroup.featuresPropertyChanged.subscribe((featurePropertyChanged) => {
+  const layer = featurePropertyChanged[CommonProperties.LayerUid];
+  const key = featurePropertyChanged.propertyKey;
+  print(`Changed "${key}" in all features of layer "${layer}"`);
+});
 
 // A component wanting to add another feature.
 const featureX = new OlFeature({
@@ -64,5 +63,5 @@ const featureX = new OlFeature({
 overlayLayerGroup.addFeatures(layer1Id, [featureX]);
 
 // A component wanting to set a property of all features.
-const features = overlayLayerGroup.getFeaturesCollection(layer1Id).getArray();
+const features = overlayLayerGroup.getFeaturesCollection(layer1Id)!.getArray();
 overlayLayerGroup.setFeaturesProperty(layer1Id, features, 'protected', true);

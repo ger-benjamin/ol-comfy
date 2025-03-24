@@ -1,5 +1,5 @@
-import { EventsKey } from 'ol/events';
-import { unByKey } from 'ol/Observable';
+import { type EventsKey } from 'ol/events.js';
+import { unByKey } from 'ol/Observable.js';
 
 /**
  * Unsubscribe to all OpenLayer listeners.
