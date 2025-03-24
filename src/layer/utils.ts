@@ -1,10 +1,10 @@
-import OlFormatWMTSCapabilities from 'ol/format/WMTSCapabilities';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
-import { Geometry as OlGeometry } from 'ol/geom';
-import OlFeature from 'ol/Feature';
-import RenderFeature from 'ol/render/Feature';
-import OlStyle from 'ol/style/Style';
+import OlFormatWMTSCapabilities from 'ol/format/WMTSCapabilities.js';
+import OlLayerVector from 'ol/layer/Vector.js';
+import OlSourceVector from 'ol/source/Vector.js';
+import { Geometry as OlGeometry } from 'ol/geom.js';
+import OlFeature from 'ol/Feature.js';
+import RenderFeature from 'ol/render/Feature.js';
+import OlStyle from 'ol/style/Style.js';
 
 /**
  * Parse a capabilities string document and returns a capabilities object with
@@ -21,7 +21,7 @@ export const parseWMTSCapabilities = (
  * Set the style of a layer (only) once.
  */
 export const updateLayerStyle = (
-  layer: OlLayerVector<OlSourceVector<OlGeometry>>,
+  layer: OlLayerVector<OlSourceVector<OlFeature>>,
   styleFn: (feature: OlFeature<OlGeometry> | RenderFeature) => OlStyle | OlStyle[],
 ) => {
   if (layer.get('draw-style-set')) {

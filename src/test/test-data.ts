@@ -1,7 +1,7 @@
-import OlLayerGroup from 'ol/layer/Group';
-import OlFeature from 'ol/Feature';
-import OlGeomPoint from 'ol/geom/Point';
-import OlMap from 'ol/Map';
+import OlLayerGroup from 'ol/layer/Group.js';
+import OlFeature from 'ol/Feature.js';
+import OlGeomPoint from 'ol/geom/Point.js';
+import OlMap from 'ol/Map.js';
 
 export const getMap = (olcClass: unknown): OlMap => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

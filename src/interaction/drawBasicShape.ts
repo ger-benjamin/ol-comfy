@@ -1,9 +1,9 @@
-import OlInteractionDraw, { Options } from 'ol/interaction/Draw';
-import { Draw } from './draw';
-import OlMap from 'ol/Map';
-import OlSourceVector from 'ol/source/Vector';
-import OlGeometry from 'ol/geom/Geometry';
-import { never } from 'ol/events/condition';
+import OlInteractionDraw, { type Options } from 'ol/interaction/Draw.js';
+import OlMap from 'ol/Map.js';
+import OlSourceVector from 'ol/source/Vector.js';
+import { never } from 'ol/events/condition.js';
+import { Draw } from './draw.js';
+import type OlFeature from 'ol/Feature.js';
 
 /**
  * Manage "shape" drawing interaction on an OpenLayers map.
@@ -29,7 +29,7 @@ export class DrawBasicShape extends Draw {
    * Get defaults configured Drawing options to draw polygons.
    * @static
    */
-  static getDefaultPolygonOptions(source: OlSourceVector<OlGeometry>): Options {
+  static getDefaultPolygonOptions(source: OlSourceVector<OlFeature>): Options {
     return {
       freehandCondition: never,
       source,
@@ -41,7 +41,7 @@ export class DrawBasicShape extends Draw {
    * Get defaults configured Drawing options to draw circles.
    * @static
    */
-  static getDefaultCircleOptions(source: OlSourceVector<OlGeometry>): Options {
+  static getDefaultCircleOptions(source: OlSourceVector<OlFeature>): Options {
     return {
       source,
       type: 'Circle',
@@ -52,7 +52,7 @@ export class DrawBasicShape extends Draw {
    * Get defaults configured Drawing options to draw lines.
    * @static
    */
-  static getDefaultLineOptions(source: OlSourceVector<OlGeometry>): Options {
+  static getDefaultLineOptions(source: OlSourceVector<OlFeature>): Options {
     return {
       freehandCondition: never,
       source,
@@ -64,7 +64,7 @@ export class DrawBasicShape extends Draw {
    * Get defaults configured Drawing options to draw points.
    * @static
    */
-  static getDefaultPointOptions(source: OlSourceVector<OlGeometry>): Options {
+  static getDefaultPointOptions(source: OlSourceVector<OlFeature>): Options {
     return {
       source,
       type: 'Point',

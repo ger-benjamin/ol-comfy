@@ -1,8 +1,8 @@
 import { describe, beforeEach, it, expect } from 'vitest';
-import OlView from 'ol/View';
-import { Map } from '../map/map';
-import { View } from './view';
-import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside';
+import OlView from 'ol/View.js';
+import { Map } from '../map/map.js';
+import { View } from './view.js';
+import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside.js';
 
 /* Standard OpenLayers animation duration is 250ms. Add 50 more to be sure. */
 const ANIMATION_WAIT_TIME = OPENLAYERS_ANIMATION_DELAY + 50;

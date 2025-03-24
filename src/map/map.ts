@@ -1,5 +1,5 @@
-import OlMap from 'ol/Map';
-import OlControl from 'ol/control/Control';
+import OlMap from 'ol/Map.js';
+import OlControl from 'ol/control/Control.js';
 
 export const ControlUidKey = 'olcControlUid';
 

@@ -1,21 +1,21 @@
-import OlMap from 'ol/Map';
-import { CommonProperties, LayerGroup, LayerGroupOptions } from './layer-group';
+import { has, isNil } from 'lodash';
+import { Subject } from 'rxjs';
+import OlMap from 'ol/Map.js';
+import { CommonProperties, LayerGroup, type LayerGroupOptions } from './layer-group.js';
 import {
   createEmpty as olCreateEmptyExtent,
   extend as olExtend,
-  Extent as OlExtent,
+  type Extent as OlExtent,
   isEmpty as olIsEmpty,
-} from 'ol/extent';
-import OlFeature from 'ol/Feature';
-import OlLayerVector from 'ol/layer/Vector';
-import OlSourceVector from 'ol/source/Vector';
-import { Geometry as OlGeometry } from 'ol/geom';
-import OlCollection from 'ol/Collection';
-import OlSourceCluster from 'ol/source/Cluster';
-import { has, isNil } from 'lodash';
-import { Subject } from 'rxjs';
-import { getObservable } from '../map/utils';
-import { getFeaturesExtent } from '../feature/utils';
+} from 'ol/extent.js';
+import OlFeature from 'ol/Feature.js';
+import OlLayerVector from 'ol/layer/Vector.js';
+import OlSourceVector from 'ol/source/Vector.js';
+import { Geometry as OlGeometry } from 'ol/geom.js';
+import OlCollection from 'ol/Collection.js';
+import OlSourceCluster from 'ol/source/Cluster.js';
+import { getObservable } from '../map/utils.js';
+import { getFeaturesExtent } from '../feature/utils.js';
 
 export const DefaultOverlayLayerGroupName = 'olcOverlayLayerGroup';
 
@@ -93,7 +93,7 @@ export class OverlayLayerGroup extends LayerGroup {
    *     effective cluster source, and not the vector source inside the
    *     cluster source).
    */
-  getVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
+  getVectorSource(layerUid: string): OlSourceVector<OlFeature> | null {
     const layer = this.getVectorLayer(layerUid);
     if (layer === null) {
       return null;
@@ -107,12 +107,12 @@ export class OverlayLayerGroup extends LayerGroup {
    * Meaning the normal source on vector layer with VectorSource, and the
    * vector source inside the cluster source for ClusterSource.
    */
-  getEndVectorSource(layerUid: string): OlSourceVector<OlGeometry> | null {
+  getEndVectorSource(layerUid: string): OlSourceVector<OlFeature> | null {
     const source = this.getVectorSource(layerUid);
     // Returns the vector source from cluster source if it exists. And from
     // the vector source directly otherwise.
     if (has(source, 'source')) {
-      return (source as OlSourceCluster).getSource();
+      return (source as unknown as OlSourceCluster).getSource();
     }
     return source;
   }
@@ -242,7 +242,7 @@ export class OverlayLayerGroup extends LayerGroup {
    * @param layerUid id of the layer
    * @returns The cluster features in the layer or null
    * Do not modify or save cluster features as they are recreated dynamically
-   * on each map rendering (move, zoom, etc). It's not possible to rely on
+   * on each map rendering (move, zoom, etc.). It's not possible to rely on
    *     this object.
    */
   getClusterFeatures(layerUid: string): OlFeature<OlGeometry>[] | null {

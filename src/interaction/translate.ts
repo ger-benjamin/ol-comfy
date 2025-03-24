@@ -1,7 +1,7 @@
 import OlInteractionTranslate, {
-  Options as TranslateOptions,
-} from 'ol/interaction/Translate';
-import OlMap from 'ol/Map';
+  type Options as TranslateOptions,
+} from 'ol/interaction/Translate.js';
+import OlMap from 'ol/Map.js';
 
 /**
  * Base class to manage OL Translate interactions.

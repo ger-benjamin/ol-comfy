@@ -1,6 +1,6 @@
-import OlMap from 'ol/Map';
-import { CommonProperties, LayerGroup, LayerGroupOptions } from './layer-group';
 import { isNil } from 'lodash';
+import OlMap from 'ol/Map.js';
+import { CommonProperties, LayerGroup, type LayerGroupOptions } from './layer-group.js';
 
 export const DefaultLayerBGGroupName = 'olcBackgroundLayerGroup';
 

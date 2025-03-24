@@ -1,5 +1,5 @@
-import OlCollection from 'ol/Collection';
-import OlBaseObject from 'ol/Object';
+import OlCollection from 'ol/Collection.js';
+import OlBaseObject from 'ol/Object.js';
 
 /**
  * Get an OpenLayers object and return it sorted by the given key property.

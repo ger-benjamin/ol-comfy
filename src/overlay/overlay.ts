@@ -1,5 +1,5 @@
-import OlMap from 'ol/Map';
-import OlOverlay from 'ol/Overlay';
+import OlMap from 'ol/Map.js';
+import OlOverlay from 'ol/Overlay.js';
 
 export const OverlayGroupUid = 'olcOverlayGroupUid';
 

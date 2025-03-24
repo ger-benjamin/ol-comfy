@@ -1,16 +1,16 @@
 import { uniq } from 'lodash';
-import OlFeature from 'ol/Feature';
-import { Geometry as OlGeometry } from 'ol/geom';
-import OlGeomPoint from 'ol/geom/Point';
-import OlGeomLine from 'ol/geom/LineString';
-import OlGeomPolygon from 'ol/geom/Polygon';
-import OlGeomCircle from 'ol/geom/Circle';
+import OlFeature from 'ol/Feature.js';
+import { Geometry as OlGeometry } from 'ol/geom.js';
+import OlGeomPoint from 'ol/geom/Point.js';
+import OlGeomLine from 'ol/geom/LineString.js';
+import OlGeomPolygon from 'ol/geom/Polygon.js';
+import OlGeomCircle from 'ol/geom/Circle.js';
 import {
   createEmpty as olCreateEmptyExtent,
   extend as olExtend,
-  Extent as OlExtent,
   isEmpty as olIsEmpty,
-} from 'ol/extent';
+  type Extent as OlExtent,
+} from 'ol/extent.js';
 
 /**
  * @param features the features to get the properties values from.
@@ -45,14 +45,16 @@ export const getLinesBetweenPoints = (
 ): OlFeature<OlGeomLine>[] => {
   const pointsShifted = Array.from(points.slice(1));
   return pointsShifted.map((_point, index) => {
+    const startPoint = points[index]!;
+    const endPoint = pointsShifted[index]!;
     const line = new OlFeature<OlGeomLine>({
       geometry: new OlGeomLine([
-        points[index].getGeometry()?.getCoordinates() || [],
-        pointsShifted[index].getGeometry()?.getCoordinates() || [],
+        startPoint.getGeometry()?.getCoordinates() || [],
+        endPoint.getGeometry()?.getCoordinates() || [],
       ]),
     });
     if (opt_onLineCreated) {
-      opt_onLineCreated(line, points[index], pointsShifted[index]);
+      opt_onLineCreated(line, startPoint, endPoint);
     }
     return line;
   });

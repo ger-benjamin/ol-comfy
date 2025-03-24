@@ -1,13 +1,14 @@
-import OlMap, { FrameState as OlFrameState } from 'ol/Map';
-import OlCollection from 'ol/Collection';
-import OlLayerGroup from 'ol/layer/Group';
-import OlLayerBase from 'ol/layer/Base';
 import { flatten, isNil, uniq } from 'lodash';
-import OlLayerLayer from 'ol/layer/Layer';
-import OlSourceSource from 'ol/source/Source';
 import { Subject } from 'rxjs';
-import { insertAtKeepOrder } from '../collection';
-import { getObservable } from '../map/utils';
+import OlMap from 'ol/Map.js';
+import OlCollection from 'ol/Collection.js';
+import OlLayerGroup from 'ol/layer/Group.js';
+import OlLayerBase from 'ol/layer/Base.js';
+import OlLayerLayer from 'ol/layer/Layer.js';
+import OlSourceSource from 'ol/source/Source.js';
+import type { ViewStateLayerStateExtent } from 'ol/View.js';
+import { insertAtKeepOrder } from '../collection.js';
+import { getObservable } from '../map/utils.js';
 
 /**
  * Layers common properties
@@ -38,6 +39,7 @@ export interface LayerGroupOptions {
 export class LayerGroup {
   private readonly layerAddedId = 'olcLayerAdded';
   protected readonly map: OlMap;
+  // @ts-expect-error this will be handled by the cild classes
   protected layerGroup: OlLayerGroup;
 
   constructor(map: OlMap, layerGroupUid: string) {
@@ -241,7 +243,7 @@ export class LayerGroup {
     // Small hack to get the attribution without needed an Ol/control see
     // https://github.com/openlayers/openlayers/blob/29dcdeee5570fcfd8151768fcc9a493d8fda5164/src/ol/source/Source.js#L224-L241
     const attributions = attributionsFn
-      ? attributionsFn({} as unknown as OlFrameState)
+      ? attributionsFn({} as unknown as ViewStateLayerStateExtent)
       : [];
     return Array.isArray(attributions) ? attributions : [attributions];
   }

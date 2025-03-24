@@ -1,8 +1,8 @@
 import { describe, beforeEach, it, expect } from 'vitest';
-import OlOverlay from 'ol/Overlay';
-import { Map } from '../map/map';
-import { Overlay } from './overlay';
-import OlMap from 'ol/Map';
+import OlOverlay from 'ol/Overlay.js';
+import { Map } from '../map/map.js';
+import { Overlay } from './overlay.js';
+import OlMap from 'ol/Map.js';
 
 describe('OverlayStore', () => {
   let map: OlMap;

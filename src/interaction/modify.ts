@@ -1,5 +1,7 @@
-import OlInteractionModify, { Options as ModifyOptions } from 'ol/interaction/Modify';
-import OlMap from 'ol/Map';
+import OlInteractionModify, {
+  type Options as ModifyOptions,
+} from 'ol/interaction/Modify.js';
+import OlMap from 'ol/Map.js';
 
 /**
  * Base class to manage OL Modify interactions.

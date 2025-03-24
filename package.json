@@ -1,23 +1,16 @@
 {
   "name": "ol-comfy",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Confortable and convenient ol shortcuts for standard usage.",
-  "main": "dist/index.js",
-  "source": "src/index.ts",
-  "directories": {
-    "example": "examples"
-  },
-  "types": [
-    "lib/index.d.ts"
-  ],
+  "type": "module",
   "dependencies": {
-    "@types/lodash": "^4.17.16",
     "lodash": "^4.17.21",
     "ol": "^10.4.0",
     "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/lodash": "^4.17.16",
     "core-js": "^3.40.0",
     "eslint": "^8.33.0",
     "happy-dom": "^16.7.3",
@@ -32,7 +25,7 @@
     "build": "npm run check && npm run test && npm run build-only",
     "build-only": "tsc --skipLibCheck --pretty",
     "check": "npm run prettier && npm run lint",
-    "doc": "typedoc src --out apidoc --readme none --hideGenerator",
+    "doc": "typedoc --out apidoc --readme none --hideGenerator --entryPointStrategy Expand src",
     "lint": "eslint src/*.ts src/**/*.ts",
     "prettier": "npx prettier '{examples/,src/}{**/*,*}.{js,ts,jsx,tsx,html,css}' --write",
     "dev": "vite dev",
