@@ -1,7 +1,9 @@
 import { MapBrowserEvent } from 'ol';
 
-type conditionFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => boolean;
-type callBackFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => void;
+/** Ol condition function signature. */
+export type conditionFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => boolean;
+/** Ol condition callback signature for function without params. */
+export type callBackFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => void;
 
 /**
  * Handy function that can be used as condition without using the condition signature.
@@ -18,7 +20,8 @@ export const condition = (testFn: () => boolean): conditionFn => {
 /**
  * @param condition The condition to test.
  * @param callback A callback to execute if the condition is fulfilled.
- * @returns a condition function that check the given condition. If the condition is truthy, execute the callback.
+ * @returns a condition function that check the given condition.
+ * If the condition is truthy, execute the callback.
  */
 export const conditionThen = (
   condition: conditionFn,
