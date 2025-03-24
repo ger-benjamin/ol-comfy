@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Confortable and convenient ol shortcuts for standard usage.",
   "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
   "_peerDependenciesComment_": "Dependencies with open range version, to grant liberties on final usage.",
   "peerDependencies": {
     "lodash": ">=4.17.21",
