@@ -22,7 +22,7 @@ export class View {
     this.view = this.map.getView();
     if (listen) {
       this.eventsKeys.push(
-        this.map.on('change:view', () => (this.view = this.map.getView()))
+        this.map.on('change:view', () => (this.view = this.map.getView())),
       );
     }
   }
@@ -49,11 +49,7 @@ export class View {
     if (isNil(resolution)) {
       return undefined;
     }
-    return getPointResolution(
-      this.view.getProjection(),
-      resolution,
-      coordinates
-    );
+    return getPointResolution(this.view.getProjection(), resolution, coordinates);
   }
 
   /**

@@ -37,7 +37,7 @@ map.setView(
   new OlView({
     center: [0, 0],
     zoom: 2,
-  })
+  }),
 );
 map.setTarget('map');
 
@@ -49,13 +49,11 @@ const backgroundLayerGroup = new BackgroundLayerGroup(map);
 backgroundLayerGroup.addLayer(backgroundLayer1, backgroundLayer1Id);
 
 // A component wanting to know changes on features for a specific layer.
-overlayLayerGroup.featuresPropertyChanged.subscribe(
-  (featurePropertyChanged) => {
-    const layer = featurePropertyChanged[CommonProperties.LayerUid];
-    const key = featurePropertyChanged.propertyKey;
-    print(`Changed "${key}" in all features of layer "${layer}"`);
-  }
-);
+overlayLayerGroup.featuresPropertyChanged.subscribe((featurePropertyChanged) => {
+  const layer = featurePropertyChanged[CommonProperties.LayerUid];
+  const key = featurePropertyChanged.propertyKey;
+  print(`Changed "${key}" in all features of layer "${layer}"`);
+});
 
 // A component wanting to add another feature.
 const featureX = new OlFeature({

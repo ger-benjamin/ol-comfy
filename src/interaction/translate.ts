@@ -12,7 +12,10 @@ export class Translate {
   /**
    * Add a new Translate Interaction in the map.
    */
-  constructor(private map: OlMap, options: TranslateOptions) {
+  constructor(
+    private map: OlMap,
+    options: TranslateOptions,
+  ) {
     this.translateInteraction = new OlInteractionTranslate(options);
     this.map.addInteraction(this.translateInteraction);
   }

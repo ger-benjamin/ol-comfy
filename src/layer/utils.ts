@@ -11,7 +11,7 @@ import OlStyle from 'ol/style/Style';
  * it.
  */
 export const parseWMTSCapabilities = (
-  wmtsCapabilities: string
+  wmtsCapabilities: string,
 ): Record<string, unknown> => {
   const parserWMTSCapabilities = new OlFormatWMTSCapabilities();
   return parserWMTSCapabilities.read(wmtsCapabilities);
@@ -22,9 +22,7 @@ export const parseWMTSCapabilities = (
  */
 export const updateLayerStyle = (
   layer: OlLayerVector<OlSourceVector<OlGeometry>>,
-  styleFn: (
-    feature: OlFeature<OlGeometry> | RenderFeature
-  ) => OlStyle | OlStyle[]
+  styleFn: (feature: OlFeature<OlGeometry> | RenderFeature) => OlStyle | OlStyle[],
 ) => {
   if (layer.get('draw-style-set')) {
     return;

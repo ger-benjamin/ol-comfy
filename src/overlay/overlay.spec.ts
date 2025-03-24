@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import OlOverlay from 'ol/Overlay';
 import { Map } from '../map/map';
 import { Overlay } from './overlay';
@@ -16,14 +17,8 @@ describe('OverlayStore', () => {
     const overlayGroupIdB = 'overlaysB';
     expect(map.getOverlays().getLength()).toEqual(0);
 
-    overlayLayerGroup.addOverlay(
-      overlayGroupIdA,
-      new OlOverlay({ position: [0, 0] })
-    );
-    overlayLayerGroup.addOverlay(
-      overlayGroupIdB,
-      new OlOverlay({ position: [0, 0] })
-    );
+    overlayLayerGroup.addOverlay(overlayGroupIdA, new OlOverlay({ position: [0, 0] }));
+    overlayLayerGroup.addOverlay(overlayGroupIdB, new OlOverlay({ position: [0, 0] }));
     expect(map.getOverlays().getLength()).toEqual(2);
     expect(overlayLayerGroup.getOverlays(overlayGroupIdA).length).toEqual(1);
     expect(overlayLayerGroup.getOverlays(overlayGroupIdB).length).toEqual(1);

@@ -8,7 +8,7 @@ export const insertAtKeepOrder = <T extends OlBaseObject>(
   objects: OlCollection<T>,
   object: T,
   orderKey: string,
-  position: number
+  position: number,
 ) => {
   object.set(orderKey, position);
   let nearestUpperIndex = objects

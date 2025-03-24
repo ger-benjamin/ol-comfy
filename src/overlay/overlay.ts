@@ -34,9 +34,7 @@ export class Overlay {
     this.map
       .getOverlays()
       .getArray()
-      .filter(
-        (overlay: OlOverlay) => overlay.get(OverlayGroupUid) === overlayGroupUid
-      )
+      .filter((overlay: OlOverlay) => overlay.get(OverlayGroupUid) === overlayGroupUid)
       .forEach((overlay: OlOverlay) => this.map.removeOverlay(overlay));
   }
 

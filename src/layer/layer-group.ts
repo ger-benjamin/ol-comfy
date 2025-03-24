@@ -51,7 +51,7 @@ export class LayerGroup {
   get layerAdded(): Subject<OlLayerBase> {
     return getObservable(
       this.map,
-      this.getObservableName(this.layerAddedId)
+      this.getObservableName(this.layerAddedId),
     ) as Subject<OlLayerBase>;
   }
 
@@ -96,8 +96,7 @@ export class LayerGroup {
       this.layerGroup
         .getLayers()
         .getArray()
-        .find((layer) => layer.get(CommonProperties.LayerUid) === layerUid) ||
-      null
+        .find((layer) => layer.get(CommonProperties.LayerUid) === layerUid) || null
     );
   }
 
@@ -112,9 +111,9 @@ export class LayerGroup {
           .getArray()
           .filter((layer) => layer.getVisible())
           .map((layer) =>
-            this.getAttributionFromLayer(layer as OlLayerLayer<OlSourceSource>)
-          )
-      )
+            this.getAttributionFromLayer(layer as OlLayerLayer<OlSourceSource>),
+          ),
+      ),
     );
   }
 
@@ -179,7 +178,7 @@ export class LayerGroup {
       this.map.getLayers(),
       this.layerGroup,
       `olcPosition-${layerGroupUid}`,
-      position
+      position,
     );
   }
 
@@ -194,7 +193,7 @@ export class LayerGroup {
         .find(
           (layerGroup) =>
             layerGroup.get(CommonProperties.LayerUid) === layerUid &&
-            layerGroup instanceof OlLayerGroup
+            layerGroup instanceof OlLayerGroup,
         ) as OlLayerGroup) || null
     );
   }
@@ -212,10 +211,7 @@ export class LayerGroup {
    * @returns A unique observable name.
    * @private
    */
-  private getObservableNameFromLayerUid(
-    observableName: string,
-    layerGroupUid: string
-  ) {
+  private getObservableNameFromLayerUid(observableName: string, layerGroupUid: string) {
     return `${observableName}-${layerGroupUid}`;
   }
 
@@ -227,7 +223,7 @@ export class LayerGroup {
   private addObservables(layerGroupUid: string) {
     const observableName = this.getObservableNameFromLayerUid(
       this.layerAddedId,
-      layerGroupUid
+      layerGroupUid,
     );
     if (getObservable(this.map, observableName)) {
       return;
@@ -240,9 +236,7 @@ export class LayerGroup {
    * @returns An array of attributions.
    * @private
    */
-  private getAttributionFromLayer(
-    layer: OlLayerLayer<OlSourceSource>
-  ): string[] {
+  private getAttributionFromLayer(layer: OlLayerLayer<OlSourceSource>): string[] {
     const attributionsFn = layer.getSource()?.getAttributions();
     // Small hack to get the attribution without needed an Ol/control see
     // https://github.com/openlayers/openlayers/blob/29dcdeee5570fcfd8151768fcc9a493d8fda5164/src/ol/source/Source.js#L224-L241

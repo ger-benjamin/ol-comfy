@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import OlLayerVector from 'ol/layer/Vector';
 import OlTileLayer from 'ol/layer/Tile';
 import OlSourceVector from 'ol/source/Vector';
@@ -11,7 +12,7 @@ import OlCollection from 'ol/Collection';
 
 describe('OverlayLayerGroup', () => {
   let overlayLayerGroup: OverlayLayerGroup;
-  let overlayLayer: OlLayerVector<any>;
+  let overlayLayer: OlLayerVector<OlSourceVector>;
   const tileLayerUid = 'tile-layer-id';
 
   beforeEach(() => {
@@ -175,9 +176,7 @@ describe('OverlayLayerGroup', () => {
       expect(overlayLayer.getSource().getFeatures().length).toEqual(0);
       expect(overlayLayerGroup.getLayerFeaturesExtent(layerUid)).toBeNull();
       overlayLayerGroup.addFeatures(layerUid, features);
-      expect(overlayLayerGroup.getLayerFeaturesExtent(layerUid)).toEqual(
-        expectedExtent
-      );
+      expect(overlayLayerGroup.getLayerFeaturesExtent(layerUid)).toEqual(expectedExtent);
     });
 
     it('should getFeatureExtents', () => {
@@ -195,19 +194,18 @@ describe('OverlayLayerGroup', () => {
     });
   });
 
-  it('should emitSelectFeatures', (done) => {
-    const layerUid = 'overlay';
-    const features = [
-      new OlFeature({ geometry: new OlGeomPoint([3000, -1000]) }),
-    ];
-    overlayLayerGroup.featuresSelected.subscribe((evt) => {
-      expect(evt[CommonProperties.LayerUid]).toBe(layerUid);
-      expect(evt.selected.length).toEqual(0);
-      expect(evt.deselected).toBe(features);
-      done();
-    });
-    overlayLayerGroup.emitSelectFeatures(layerUid, [], features);
-  });
+  it('should emitSelectFeatures', () =>
+    new Promise((done) => {
+      const layerUid = 'overlay';
+      const features = [new OlFeature({ geometry: new OlGeomPoint([3000, -1000]) })];
+      overlayLayerGroup.featuresSelected.subscribe((evt) => {
+        expect(evt[CommonProperties.LayerUid]).toBe(layerUid);
+        expect(evt.selected.length).toEqual(0);
+        expect(evt.deselected).toBe(features);
+        done('Done');
+      });
+      overlayLayerGroup.emitSelectFeatures(layerUid, [], features);
+    }));
 
   it('should setFeaturesProperty', () => {
     const layerUid = 'test';
@@ -221,42 +219,38 @@ describe('OverlayLayerGroup', () => {
       undefined,
       undefined,
     ]);
-    overlayLayerGroup.setFeaturesProperty(
-      layerUid,
-      features,
-      propertyKey,
-      propertyValue
-    );
+    overlayLayerGroup.setFeaturesProperty(layerUid, features, propertyKey, propertyValue);
     expect(features.map((feature) => feature.get(propertyKey))).toEqual([
       propertyValue,
       propertyValue,
     ]);
   });
 
-  it('should emitFeaturePropertyChanged', (done) => {
-    const layerUid = 'test';
-    const features = [new OlFeature({ geometry: new OlGeomPoint([0, 1000]) })];
-    const propertyKey = 'foo';
-    const propertyValue = 'bar';
-    overlayLayerGroup.featuresPropertyChanged.subscribe((evt) => {
-      expect(evt[CommonProperties.LayerUid]).toBe(layerUid);
-      expect(evt.propertyKey).toBe('foo');
-      done();
-    });
-    overlayLayerGroup.setFeaturesProperty(
-      layerUid,
-      features,
-      propertyKey,
-      propertyValue
-    );
-  });
+  it('should emitFeaturePropertyChanged', () =>
+    new Promise((done) => {
+      const layerUid = 'test';
+      const features = [new OlFeature({ geometry: new OlGeomPoint([0, 1000]) })];
+      const propertyKey = 'foo';
+      const propertyValue = 'bar';
+      overlayLayerGroup.featuresPropertyChanged.subscribe((evt) => {
+        expect(evt[CommonProperties.LayerUid]).toBe(layerUid);
+        expect(evt.propertyKey).toBe('foo');
+        done('Done');
+      });
+      overlayLayerGroup.setFeaturesProperty(
+        layerUid,
+        features,
+        propertyKey,
+        propertyValue,
+      );
+    }));
 
   it('should return empty cluster array', () => {
     const layerUid = 'cluster';
     const clusterLayer = new OlLayerVector({
       source: new OlSourceCluster({
         source: new OlSourceVector({
-          features: new OlCollection(),
+          features: new OlCollection<OlFeature>(),
         }),
       }),
     });

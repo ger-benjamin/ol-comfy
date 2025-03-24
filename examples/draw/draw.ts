@@ -53,7 +53,7 @@ map.setView(
   new OlView({
     center: [0, 0],
     zoom: 2,
-  })
+  }),
 );
 map.setTarget('map');
 
@@ -107,9 +107,9 @@ const setupDrawing = () => {
     deleteCondition: conditionThen(
       overEvery(
         click,
-        condition(() => listenKey.isKeyDown())
+        condition(() => listenKey.isKeyDown()),
       ),
-      delayOnDeleteAction.bind(this)
+      delayOnDeleteAction.bind(this),
     ),
     source,
     style: createStyle,
@@ -130,7 +130,7 @@ const setupDrawing = () => {
       drawLine.getInteraction().on('drawend', (evt) => {
         print(`Line ${evt.feature['ol_uid']} added.`);
       }),
-    ]
+    ],
   );
 };
 
@@ -138,7 +138,7 @@ const setupDrawing = () => {
  * Not ol-comfy, but nice to have to customize style.
  */
 const createStyle = (
-  feature: OlFeature<OlGeometry> | RenderFeature
+  feature: OlFeature<OlGeometry> | RenderFeature,
 ): OlStyle | OlStyle[] => {
   const geometry = feature?.getGeometry();
   const type = geometry?.getType();
@@ -207,7 +207,7 @@ const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
         modify.getInteraction().setActive(false);
         modify.getInteraction().setActive(true);
       }
-    }
+    },
   );
 };
 

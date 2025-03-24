@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import { Map } from './map';
 import { ScaleLine } from 'ol/control';
 

@@ -43,8 +43,7 @@ export interface FeaturePropertyChanged {
  */
 export class OverlayLayerGroup extends LayerGroup {
   private readonly featureSelectedId = 'olcOverlayLayerFeatureSelected';
-  private readonly featuresPropertyChangedId =
-    'olcOverlayLayerFeaturePropertyChanged';
+  private readonly featuresPropertyChangedId = 'olcOverlayLayerFeaturePropertyChanged';
 
   constructor(map: OlMap, options: LayerGroupOptions = {}) {
     const layerGroupUid =
@@ -63,7 +62,7 @@ export class OverlayLayerGroup extends LayerGroup {
   get featuresSelected(): Subject<FeatureSelected> {
     return getObservable(
       this.map,
-      this.getObservableName(this.featureSelectedId)
+      this.getObservableName(this.featureSelectedId),
     ) as Subject<FeatureSelected>;
   }
 
@@ -74,7 +73,7 @@ export class OverlayLayerGroup extends LayerGroup {
   get featuresPropertyChanged(): Subject<FeaturePropertyChanged> {
     return getObservable(
       this.map,
-      this.getObservableName(this.featuresPropertyChangedId)
+      this.getObservableName(this.featuresPropertyChangedId),
     ) as Subject<FeaturePropertyChanged>;
   }
 
@@ -172,9 +171,7 @@ export class OverlayLayerGroup extends LayerGroup {
    *   null.
    */
   getLayerFeaturesExtent(layerUid: string): OlExtent | null {
-    return getFeaturesExtent(
-      this.getFeaturesCollection(layerUid)?.getArray() || []
-    );
+    return getFeaturesExtent(this.getFeaturesCollection(layerUid)?.getArray() || []);
   }
 
   /**
@@ -189,10 +186,9 @@ export class OverlayLayerGroup extends LayerGroup {
         (currentExtent, layer) =>
           olExtend(
             currentExtent,
-            this.getLayerFeaturesExtent(layer.get(CommonProperties.LayerUid)) ??
-              []
+            this.getLayerFeaturesExtent(layer.get(CommonProperties.LayerUid)) ?? [],
           ),
-        olCreateEmptyExtent()
+        olCreateEmptyExtent(),
       );
     return extent && !olIsEmpty(extent) ? extent : null;
   }
@@ -203,9 +199,7 @@ export class OverlayLayerGroup extends LayerGroup {
    * collection to add/remove features. It's slow. Use related methods on the
    * source directly.
    */
-  getFeaturesCollection(
-    layerUid: string
-  ): OlCollection<OlFeature<OlGeometry>> | null {
+  getFeaturesCollection(layerUid: string): OlCollection<OlFeature<OlGeometry>> | null {
     const source = this.getEndVectorSource(layerUid);
     return source?.getFeaturesCollection() || null;
   }
@@ -216,7 +210,7 @@ export class OverlayLayerGroup extends LayerGroup {
   emitSelectFeatures(
     layerUid: string,
     selected: OlFeature<OlGeometry>[],
-    deselected: OlFeature<OlGeometry>[]
+    deselected: OlFeature<OlGeometry>[],
   ) {
     this.featuresSelected.next({
       [CommonProperties.LayerUid]: layerUid,
@@ -232,7 +226,7 @@ export class OverlayLayerGroup extends LayerGroup {
     layerUid: string,
     features: OlFeature<OlGeometry>[],
     key: string,
-    value: unknown
+    value: unknown,
   ) {
     features.forEach((feature) => {
       feature.set(key, value, true);
@@ -262,18 +256,16 @@ export class OverlayLayerGroup extends LayerGroup {
    * @private
    */
   private addOverlayLayerObservables() {
-    if (
-      getObservable(this.map, this.getObservableName(this.featureSelectedId))
-    ) {
+    if (getObservable(this.map, this.getObservableName(this.featureSelectedId))) {
       return;
     }
     this.map.set(
       this.getObservableName(this.featureSelectedId),
-      new Subject<FeatureSelected>()
+      new Subject<FeatureSelected>(),
     );
     this.map.set(
       this.getObservableName(this.featuresPropertyChangedId),
-      new Subject<FeaturePropertyChanged>()
+      new Subject<FeaturePropertyChanged>(),
     );
   }
 }

@@ -1,6 +1,4 @@
-import OlInteractionModify, {
-  Options as ModifyOptions,
-} from 'ol/interaction/Modify';
+import OlInteractionModify, { Options as ModifyOptions } from 'ol/interaction/Modify';
 import OlMap from 'ol/Map';
 
 /**
@@ -12,7 +10,10 @@ export class Modify {
   /**
    * Add a new Modify Interaction in the map.
    */
-  constructor(private map: OlMap, options: ModifyOptions) {
+  constructor(
+    private map: OlMap,
+    options: ModifyOptions,
+  ) {
     this.modifyInteraction = new OlInteractionModify(options);
     this.map.addInteraction(this.modifyInteraction);
   }

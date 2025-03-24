@@ -12,14 +12,14 @@ export const EmptyStyle = new OlStyle();
  */
 export const getDistanceFromAmountOfPixel = (
   map: OlMap,
-  amountOfPixel: number
+  amountOfPixel: number,
 ): number => {
   if (isNil(map.getCoordinateFromPixel([0, 0]))) {
     return 0;
   }
   return Math.abs(
     map.getCoordinateFromPixel([0, 0])[0] -
-      map.getCoordinateFromPixel([amountOfPixel, 0])[0]
+      map.getCoordinateFromPixel([amountOfPixel, 0])[0],
   );
 };
 
@@ -28,7 +28,7 @@ export const getDistanceFromAmountOfPixel = (
  */
 export const getObservable = (
   map: OlMap,
-  observableUid: string
+  observableUid: string,
 ): Subject<unknown> | undefined => {
   return map.get(observableUid);
 };

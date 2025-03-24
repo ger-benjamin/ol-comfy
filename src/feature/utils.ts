@@ -19,12 +19,12 @@ import {
  */
 export const getDistinctFeaturesProperties = (
   features: OlFeature<OlGeometry>[],
-  propertyKey: string
+  propertyKey: string,
 ): unknown[] => {
   return uniq(
     features.map((feature) => {
       return feature.get(propertyKey);
-    })
+    }),
   );
 };
 
@@ -40,8 +40,8 @@ export const getLinesBetweenPoints = (
   opt_onLineCreated?: (
     line: OlFeature<OlGeomLine>,
     startPoint: OlFeature<OlGeomPoint>,
-    endPoint: OlFeature<OlGeomPoint>
-  ) => void
+    endPoint: OlFeature<OlGeomPoint>,
+  ) => void,
 ): OlFeature<OlGeomLine>[] => {
   const pointsShifted = Array.from(points.slice(1));
   return pointsShifted.map((_point, index) => {
@@ -62,9 +62,7 @@ export const getLinesBetweenPoints = (
  * @returns OlGeomPoint at the center of the given "area" geometry (circle
  * or polygon).
  */
-export const getCenterOfArea = (
-  geometry: OlGeomPolygon | OlGeomCircle
-): OlGeomPoint => {
+export const getCenterOfArea = (geometry: OlGeomPolygon | OlGeomCircle): OlGeomPoint => {
   if (geometry instanceof OlGeomPolygon) {
     return geometry.getInteriorPoint();
   }
@@ -74,14 +72,12 @@ export const getCenterOfArea = (
 /**
  * @returns The extent (not empty) of all given features.
  */
-export const getFeaturesExtent = (
-  features: OlFeature<OlGeometry>[]
-): OlExtent | null => {
+export const getFeaturesExtent = (features: OlFeature<OlGeometry>[]): OlExtent | null => {
   const extent =
     features.reduce(
       (currentExtent, feature) =>
         olExtend(currentExtent, feature.getGeometry()?.getExtent() ?? []),
-      olCreateEmptyExtent()
+      olCreateEmptyExtent(),
     ) ?? null;
   return extent && !olIsEmpty(extent) ? extent : null;
 };

@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import OlLayerBase from 'ol/layer/Base';
 import { Map } from '../map/map';
 import { LayerGroup } from './layer-group';
@@ -15,14 +16,15 @@ describe('LayersStore', () => {
     baseLayer = new OlLayerBase({});
   });
 
-  it('should addLayer', (done) => {
-    layerGroup.layerAdded.subscribe((layer) => {
-      expect(layer).toEqual(baseLayer);
-      done();
-    });
-    layerGroup.addLayer(baseLayer, 'myLayer');
-    expect(getLayerGroup(layerGroup, 0).getLayers().getLength()).toEqual(1);
-  });
+  it('should addLayer', () =>
+    new Promise((done) => {
+      layerGroup.layerAdded.subscribe((layer) => {
+        expect(layer).toEqual(baseLayer);
+        done('Done');
+      });
+      layerGroup.addLayer(baseLayer, 'myLayer');
+      expect(getLayerGroup(layerGroup, 0).getLayers().getLength()).toEqual(1);
+    }));
 
   it('should clearAll', () => {
     layerGroup.addLayer(baseLayer, 'myLayer');
@@ -41,7 +43,7 @@ describe('LayersStore', () => {
     // Invalid empty name => fail
     layerGroup.addLayer(baseLayer, '');
     expect(group.length).toEqual(1);
-    // @ts-ignore: Could happen on runtime
+    // Could happen on runtime
     layerGroup.addLayer(null, 'anotherLayer');
     expect(group.length).toEqual(1);
   });

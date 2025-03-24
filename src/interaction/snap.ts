@@ -10,7 +10,10 @@ export class Snap {
   /**
    * Add a new Modify Interaction in the map.
    */
-  constructor(private map: OlMap, options: SnapOptions) {
+  constructor(
+    private map: OlMap,
+    options: SnapOptions,
+  ) {
     this.snapInteraction = new OlInteractionSnap(options);
     this.map.addInteraction(this.snapInteraction);
   }

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import OlCollection from 'ol/Collection';
 import { insertAtKeepOrder } from './collection';
 import OlBaseObject from 'ol/Object';

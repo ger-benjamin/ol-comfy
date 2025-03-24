@@ -5,7 +5,7 @@ import OlBaseObject from 'ol/Object';
  */
 export const getSortedOlObjectsByProperty = <T extends OlBaseObject>(
   objects: T[],
-  propertyKey: string
+  propertyKey: string,
 ): T[] => {
   return objects.slice().sort((object1, object2) => {
     const prop1 = object1.get(propertyKey) || '';

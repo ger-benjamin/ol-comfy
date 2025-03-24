@@ -18,7 +18,10 @@ export const DrawInteractionGroupValue = 'olcStandardDraw';
 export class Draw {
   protected interaction: OlInteractionDraw;
 
-  constructor(protected map: OlMap, uid: string) {
+  constructor(
+    protected map: OlMap,
+    uid: string,
+  ) {
     const interaction = this.getDrawInteraction(uid);
     if (interaction) {
       this.interaction = interaction;
@@ -83,9 +86,7 @@ export class Draw {
    * @protected
    */
   protected deactivateAll() {
-    this.getDrawInteractions().forEach((interaction) =>
-      interaction.setActive(false)
-    );
+    this.getDrawInteractions().forEach((interaction) => interaction.setActive(false));
   }
 
   /**
@@ -97,8 +98,7 @@ export class Draw {
       .getInteractions()
       .getArray()
       .find(
-        (interaction) =>
-          interaction.get(DrawInteractionUidKey) === this.getFullUid(uid)
+        (interaction) => interaction.get(DrawInteractionUidKey) === this.getFullUid(uid),
       ) as OlInteractionDraw | undefined;
   }
 
@@ -112,7 +112,7 @@ export class Draw {
       .getInteractions()
       .getArray()
       .filter(
-        (interaction) => !!interaction.get(DrawInteractionGroupKey)
+        (interaction) => !!interaction.get(DrawInteractionGroupKey),
       ) as OlInteractionDraw[];
   }
 }
