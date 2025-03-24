@@ -1,7 +1,5 @@
-/node_modules/
-/lib/
-/dist/
-/coverage/
-/apidoc/
-/.cache/
-/.parcel-cache/
+node_modules/
+dist/
+coverage/
+apidoc/
+.cache/
