@@ -27,3 +27,18 @@ Not everything is tested, but between UIT and example, the coverage is not bad.
 It's an advanced v0, but still not a v1.
 
 Some features will be added over the time.
+
+## Online doc and demos
+
+- [Documentation](https://ger-benjamin.github.io/ol-comfy/apidoc/index.html);
+- [Demo](https://ger-benjamin.github.io/ol-comfy/demo/examples/index.html);
+
+## Local development
+
+For local development we use a few demos.
+
+```bash
+npm install
+npm run dev
+```
+
