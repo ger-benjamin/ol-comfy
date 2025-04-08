@@ -1,0 +1,9 @@
+{
+  "name": "@ger-benjamin/ol-comfy",
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "out": "demo/apidoc",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true
+}
