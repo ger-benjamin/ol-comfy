@@ -178,7 +178,7 @@ const createStyle = (
  * currently modifying the feature. (Like in lines, it seems to quickly
  * add then removes a coordinates on click, even with conditions).
  */
-const delayOnDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
+const delayOnDeleteAction = (mapBrowserEvent: MapBrowserEvent) => {
   setTimeout(() => onDeleteAction(mapBrowserEvent), 20);
 };
 
@@ -186,7 +186,7 @@ const delayOnDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
  * Not ol-comfy but nice to have to delete feature.
  * It's given as callback to the ol-comfy delete condition.
  */
-const onDeleteAction = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
+const onDeleteAction = (mapBrowserEvent: MapBrowserEvent) => {
   mapBrowserEvent.map.forEachFeatureAtPixel(
     mapBrowserEvent.pixel,
     (feature: OlFeature<OlGeometry> | RenderFeature) => {

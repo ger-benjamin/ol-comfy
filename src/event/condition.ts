@@ -1,9 +1,9 @@
 import { MapBrowserEvent } from 'ol';
 
 /** Ol condition function signature. */
-export type conditionFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => boolean;
+export type conditionFn = (mapBrowserEvent: MapBrowserEvent) => boolean;
 /** Ol condition callback signature for function without params. */
-export type callBackFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => void;
+export type callBackFn = (mapBrowserEvent: MapBrowserEvent) => void;
 
 /**
  * Handy function that can be used as condition without using the condition signature.
@@ -12,7 +12,7 @@ export type callBackFn = (mapBrowserEvent: MapBrowserEvent<UIEvent>) => void;
  */
 export const condition = (testFn: () => boolean): conditionFn => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return (_mapBrowserEvent: MapBrowserEvent<UIEvent>): boolean => {
+  return (_mapBrowserEvent: MapBrowserEvent): boolean => {
     return testFn();
   };
 };
@@ -27,7 +27,7 @@ export const conditionThen = (
   condition: conditionFn,
   callback: callBackFn,
 ): conditionFn => {
-  return (mapBrowserEvent: MapBrowserEvent<UIEvent>) => {
+  return (mapBrowserEvent: MapBrowserEvent) => {
     if (condition(mapBrowserEvent)) {
       callback(mapBrowserEvent);
       return true;
