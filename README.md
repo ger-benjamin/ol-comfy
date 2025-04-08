@@ -31,7 +31,7 @@ Some features will be added over the time.
 ## Online doc and demos
 
 - [Documentation](https://ger-benjamin.github.io/ol-comfy/apidoc/index.html);
-- [Demo](https://ger-benjamin.github.io/ol-comfy/demo/examples/index.html);
+- [Demo](https://ger-benjamin.github.io/ol-comfy/examples/index.html);
 
 ## Local development
 
