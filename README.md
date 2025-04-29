@@ -38,6 +38,6 @@ The source is transpiled to standard ES modules and published on npm.
 # update CHANGES.md
 npm version patch
 npm publish
-git push --tags origin master
+git push --tags origin main
 npm run gh-pages
 ```

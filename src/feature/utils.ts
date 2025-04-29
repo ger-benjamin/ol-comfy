@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import uniq from 'lodash/uniq.js';
 import OlFeature from 'ol/Feature.js';
 import { Geometry as OlGeometry } from 'ol/geom.js';
 import OlGeomPoint from 'ol/geom/Point.js';
@@ -13,7 +13,7 @@ import {
 } from 'ol/extent.js';
 
 /**
- * @param features the features to get the properties values from.
+ * @param features the features to get the "properties" values from.
  * @param propertyKey the property key to get the value in the features.
  * @returns Distinct values of features for a given property's key.
  */
@@ -30,7 +30,7 @@ export const getDistinctFeaturesProperties = (
 
 /**
  * From points, create lines (0->1, 1->2, 2->3, etc.)
- * @param points points To create the line with.
+ * @param points points To create the line.
  * @param opt_onLineCreated Optional function to apply effect on each created
  * line.
  * @returns created lines from given points (0->1, 1->2, 2->3, etc.)

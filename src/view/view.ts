@@ -1,4 +1,3 @@
-import { isNil } from 'lodash';
 import OlMap from 'ol/Map.js';
 import OlView from 'ol/View.js';
 import { type Extent as OlExtent } from 'ol/extent.js';
@@ -6,6 +5,7 @@ import { getPointResolution } from 'ol/proj.js';
 import { OPENLAYERS_ANIMATION_DELAY } from '../const-from-outside.js';
 import { type EventsKey } from 'ol/events.js';
 import { unByKeyAll } from '../event/utils.js';
+import { isNil } from '../utils.js';
 
 /**
  * Helpers for the view in the map.
@@ -49,7 +49,7 @@ export class View {
     if (isNil(resolution)) {
       return undefined;
     }
-    return getPointResolution(this.view.getProjection(), resolution, coordinates);
+    return getPointResolution(this.view.getProjection(), resolution!, coordinates);
   }
 
   /**
@@ -72,7 +72,7 @@ export class View {
     if (isNil(currentZoom)) {
       return;
     }
-    const newZoom = this.view.getConstrainedZoom(currentZoom + delta);
+    const newZoom = this.view.getConstrainedZoom(currentZoom! + delta);
     if (isNil(newZoom)) {
       return;
     }
