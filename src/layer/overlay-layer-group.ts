@@ -1,4 +1,4 @@
-import { has, isNil } from 'lodash';
+import has from 'lodash/has.js';
 import { Subject } from 'rxjs';
 import OlMap from 'ol/Map.js';
 import { CommonProperties, LayerGroup, type LayerGroupOptions } from './layer-group.js';
@@ -38,8 +38,8 @@ export interface FeaturePropertyChanged {
 
 /**
  * LayerGroup specialized to manage layers with features (mostly vector layers).
- * Each instance must have a unique name (one cas use the default name).
- * Default position is 20.
+ * Each instance must have a unique name (the default name will be valid for the first group).
+ * The default position is 20.
  */
 export class OverlayLayerGroup extends LayerGroup {
   private readonly featureSelectedId = 'olcOverlayLayerFeatureSelected';
@@ -49,7 +49,7 @@ export class OverlayLayerGroup extends LayerGroup {
     const layerGroupUid =
       options[CommonProperties.LayerUid] || DefaultOverlayLayerGroupName;
     super(map, layerGroupUid);
-    const position = isNil(options.position) ? 20 : options.position;
+    const position = options.position ?? 20;
     this.addLayerGroup(layerGroupUid, position);
     this.addOverlayLayerObservables();
   }
@@ -104,12 +104,12 @@ export class OverlayLayerGroup extends LayerGroup {
   /**
    * @param layerUid the id of the layer to add features into.
    * @returns the last vector source in the corresponding layer or null.
-   * Meaning the normal source on vector layer with VectorSource, and the
+   * Meaning the normal source on the vector layer with VectorSource, and the
    * vector source inside the cluster source for ClusterSource.
    */
   getEndVectorSource(layerUid: string): OlSourceVector<OlFeature> | null {
     const source = this.getVectorSource(layerUid);
-    // Returns the vector source from cluster source if it exists. And from
+    // Returns the vector source from a cluster source if it exists. And from
     // the vector source directly otherwise.
     if (has(source, 'source')) {
       return (source as unknown as OlSourceCluster).getSource();
@@ -119,7 +119,7 @@ export class OverlayLayerGroup extends LayerGroup {
 
   /**
    * Add features in the target overlay layer. Does
-   * nothing with empty array.
+   * nothing with an empty array.
    * @param layerUid the id of the layer to add features into.
    * @param features the features to add to the layer.
    */
@@ -135,7 +135,7 @@ export class OverlayLayerGroup extends LayerGroup {
 
   /**
    * Remove features from the target overlay layer. Does
-   * nothing with empty array.
+   * nothing with an empty array.
    * @param layerUid the id of the layer to remove features from.
    * @param features the features to remove to the layer.
    */
@@ -196,7 +196,7 @@ export class OverlayLayerGroup extends LayerGroup {
   /**
    * @param layerUid id of the layer.
    * @returns The collections of features in the layer or null. Do not use
-   * collection to add/remove features. It's slow. Use related methods on the
+   * a collection to add/remove features. It's slow. Use related methods on the
    * source directly.
    */
   getFeaturesCollection(layerUid: string): OlCollection<OlFeature<OlGeometry>> | null {
@@ -252,7 +252,7 @@ export class OverlayLayerGroup extends LayerGroup {
 
   /**
    * Add overlay layer observables to the map if it doesn't already exist.
-   * These instances of observables will be never set or removed.
+   * These instances of observables will never be set or removed.
    * @private
    */
   private addOverlayLayerObservables() {

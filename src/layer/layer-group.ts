@@ -1,4 +1,5 @@
-import { flatten, isNil, uniq } from 'lodash';
+import flatten from 'lodash/flatten.js';
+import uniq from 'lodash/uniq.js';
 import { Subject } from 'rxjs';
 import OlMap from 'ol/Map.js';
 import OlCollection from 'ol/Collection.js';
@@ -9,6 +10,7 @@ import OlSourceSource from 'ol/source/Source.js';
 import type { ViewStateLayerStateExtent } from 'ol/View.js';
 import { insertAtKeepOrder } from '../collection.js';
 import { getObservable } from '../map/utils.js';
+import { isNil } from '../utils.js';
 
 /**
  * Layers common properties
@@ -20,7 +22,7 @@ export enum CommonProperties {
 }
 
 /**
- * Options to create layer group.
+ * Options to create a layer group.
  */
 export interface LayerGroupOptions {
   /**
@@ -33,13 +35,13 @@ export interface LayerGroupOptions {
 }
 
 /**
- * Parent (abstract) class for layer group, helps to manipulate one layer group.
+ * Parent (abstract) class for a layer group. Helps to manipulate one layer group.
  * The child class must start by setting the layerGroup.
  */
 export class LayerGroup {
   private readonly layerAddedId = 'olcLayerAdded';
   protected readonly map: OlMap;
-  // @ts-expect-error this will be handled by the cild classes
+  // @ts-expect-error this will be handled by the child classes
   protected layerGroup: OlLayerGroup;
 
   constructor(map: OlMap, layerGroupUid: string) {
@@ -139,7 +141,7 @@ export class LayerGroup {
   }
 
   /**
-   * Provides checks on a layer to know if the layer can be added in the map
+   * Provides checks on a layer to know if the layer can be added to the map
    * and set an id for it.
    * @returns true if the layer is valid and can be added. False otherwise.
    * @protected
@@ -161,7 +163,7 @@ export class LayerGroup {
   }
 
   /**
-   * Add a layer group to a specified position in the array of map's
+   * Add a layer group to a specified position in the array of a map's
    * layers.
    * @protected
    */
@@ -219,7 +221,7 @@ export class LayerGroup {
 
   /**
    * Add layer group observables to the map if it doesn't already exist.
-   * These instances of observables will be never set or removed.
+   * These instances of observables will never be set or removed.
    * @private
    */
   private addObservables(layerGroupUid: string) {

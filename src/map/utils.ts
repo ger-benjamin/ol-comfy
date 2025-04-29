@@ -1,24 +1,24 @@
-import { isNil } from 'lodash';
 import { Subject } from 'rxjs';
 import OlMap from 'ol/Map.js';
 import OlStyle from 'ol/style/Style.js';
+import { isNil } from '../utils.js';
 
 /** Single instance of an ol empty style */
 export const EmptyStyle = new OlStyle();
 
 /**
- * @returns A projection distance from an amount of pixels (from [0, 0] ->
+ * @returns A projection distance from a number of pixels (from [0, 0] ->
  * could be imprecise);
  */
 export const getDistanceFromAmountOfPixel = (
   map: OlMap,
-  amountOfPixel: number,
+  numberOfPixel: number,
 ): number => {
   const coord1 = map.getCoordinateFromPixel([0, 0]);
   if (isNil(coord1)) {
     return 0;
   }
-  const coord2 = map.getCoordinateFromPixel([amountOfPixel, 0]);
+  const coord2 = map.getCoordinateFromPixel([numberOfPixel, 0]);
   if (coord1[0] === undefined || coord2[0] === undefined) {
     return 0;
   }
