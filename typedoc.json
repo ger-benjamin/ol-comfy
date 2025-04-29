@@ -1,5 +1,5 @@
 {
-  "name": "@ger-benjamin/ol-comfy",
+  "name": "@geoblocks/ol-comfy",
   "entryPoints": ["src"],
   "entryPointStrategy": "expand",
   "out": "demo/apidoc",

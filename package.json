@@ -1,7 +1,7 @@
 {
-  "name": "ol-comfy",
+  "name": "@geoblocks/ol-comfy",
   "version": "0.0.3",
-  "description": "Confortable and convenient ol shortcuts for standard usage.",
+  "description": "Comfortable and convenient ol shortcuts for standard usage.",
   "type": "module",
   "files": [
     "src",
@@ -43,7 +43,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ger-benjamin/ol-comfy.git"
+    "url": "git+https://github.com/geoblocks/ol-comfy.git"
   },
   "keywords": [
     "OpenLayers",
@@ -55,7 +55,7 @@
   ],
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/ger-benjamin/ol-comfy/issues"
+    "url": "https://github.com/geoblocks/ol-comfy/issues"
   },
-  "homepage": "https://github.com/ger-benjamin/ol-comfy#readme"
+  "homepage": "https://github.com/geoblocks/ol-comfy#readme"
 }
